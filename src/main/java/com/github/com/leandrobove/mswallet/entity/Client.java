@@ -38,12 +38,23 @@ public class Client {
         this.validate();
     }
 
+    private Client(UUID id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+        this.id = id;
+        this.name = name;
+        this.email = email;
+        this.accounts = new ArrayList<>();
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+
+        this.validate();
+    }
+
     public static Client create(String name, String email) {
-        return new Client(UUID.randomUUID(), name, email, new ArrayList<Account>(), OffsetDateTime.now(), OffsetDateTime.now());
+        return new Client(UUID.randomUUID(), name, email, OffsetDateTime.now(), OffsetDateTime.now());
     }
 
     public static Client createWithId(String id, String name, String email) {
-        return new Client(UUID.fromString(id), name, email, new ArrayList<Account>(), OffsetDateTime.now(), OffsetDateTime.now());
+        return new Client(UUID.fromString(id), name, email, OffsetDateTime.now(), OffsetDateTime.now());
     }
 
     public static Client rebuildClient(String id, String name, String email, List<Account> accounts, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
