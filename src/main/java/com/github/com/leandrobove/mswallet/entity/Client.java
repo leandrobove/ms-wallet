@@ -85,7 +85,7 @@ public class Client {
         this.accounts.add(account);
     }
 
-    public void validate() {
+    private void validate() {
         if (this.name == "") {
             throw new IllegalArgumentException("name is required");
         }

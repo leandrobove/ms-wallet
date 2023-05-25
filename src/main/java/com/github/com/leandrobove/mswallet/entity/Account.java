@@ -41,7 +41,7 @@ public class Account {
         return new Account(UUID.fromString(id), client, BigDecimal.ZERO, OffsetDateTime.now(), OffsetDateTime.now());
     }
 
-    public void validate() {
+    private void validate() {
         if (this.client == null) {
             throw new IllegalArgumentException("client is required");
         }
