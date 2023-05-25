@@ -10,7 +10,7 @@ import java.util.UUID;
 
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @Getter
-@ToString
+@ToString(exclude = "client")
 public class Account {
     @EqualsAndHashCode.Include
     private UUID id;
