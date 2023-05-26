@@ -27,17 +27,6 @@ public class Client {
 
     private OffsetDateTime updatedAt;
 
-    private Client(UUID id, String name, String email, List<Account> accounts, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        this.id = id;
-        this.name = name;
-        this.email = email;
-        this.accounts = accounts;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-
-        this.validate();
-    }
-
     private Client(UUID id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         this.id = id;
         this.name = name;
@@ -57,8 +46,8 @@ public class Client {
         return new Client(UUID.fromString(id), name, email, OffsetDateTime.now(), OffsetDateTime.now());
     }
 
-    public static Client rebuildClient(String id, String name, String email, List<Account> accounts, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        return new Client(UUID.fromString(id), name, email, accounts, createdAt, updatedAt);
+    public static Client rebuildClient(String id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+        return new Client(UUID.fromString(id), name, email, createdAt, updatedAt);
     }
 
     public void changeName(String name) {
