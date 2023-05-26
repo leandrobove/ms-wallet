@@ -1,4 +1,4 @@
-package com.github.com.leandrobove.mswallet.database.rowmapper;
+package com.github.com.leandrobove.mswallet.database;
 
 import com.github.com.leandrobove.mswallet.entity.Client;
 import org.springframework.jdbc.core.RowMapper;

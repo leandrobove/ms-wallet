@@ -1,6 +1,5 @@
 package com.github.com.leandrobove.mswallet.database;
 
-import com.github.com.leandrobove.mswallet.database.rowmapper.ClientRowMapper;
 import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -22,12 +21,9 @@ public class ClientDb implements ClientGateway {
         String sql = """
                 SELECT id, name, email, created_at, updated_at FROM client WHERE id = ?
                 """;
-        try {
-            Client client = jdbcTemplate.queryForObject(sql, new ClientRowMapper(), id);
-            return Optional.of(client);
-        } catch (Exception ex) {
-            return Optional.empty();
-        }
+        return jdbcTemplate.query(sql, new ClientRowMapper(), id)
+                .stream()
+                .findFirst();
     }
 
     @Override

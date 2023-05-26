@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -32,7 +33,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldNotFindClient() {
-        Optional<Client> client = clientGateway.find("123");
+        Optional<Client> client = clientGateway.find(UUID.randomUUID().toString());
 
         assertThat(client).isEqualTo(Optional.empty());
     }
