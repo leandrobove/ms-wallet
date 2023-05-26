@@ -41,6 +41,10 @@ public class Account {
         return new Account(UUID.fromString(id), client, BigDecimal.ZERO, OffsetDateTime.now(), OffsetDateTime.now());
     }
 
+    public static Account rebuildAccount(String id, Client client, BigDecimal balance, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
+        return new Account(UUID.fromString(id), client, balance, createdAt, updatedAt);
+    }
+
     private void validate() {
         if (this.client == null) {
             throw new IllegalArgumentException("client is required");

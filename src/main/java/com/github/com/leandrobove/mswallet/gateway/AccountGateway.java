@@ -8,5 +8,5 @@ public interface AccountGateway {
 
     Optional<Account> find(String id);
 
-    void save(Account client);
+    void save(Account account);
 }

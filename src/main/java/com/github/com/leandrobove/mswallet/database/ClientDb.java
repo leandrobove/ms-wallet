@@ -19,7 +19,7 @@ public class ClientDb implements ClientGateway {
     @Override
     public Optional<Client> find(String id) {
         String sql = """
-                SELECT id, name, email, created_at, updated_at FROM client WHERE id = ?
+                SELECT id, name, email, created_at, updated_at FROM client WHERE id = ?;
                 """;
         return jdbcTemplate.query(sql, new ClientRowMapper(), id)
                 .stream()
