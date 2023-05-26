@@ -13,8 +13,10 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -32,18 +34,20 @@ public class CreateAccountUseCaseTest {
 
     @Test
     public void shouldCreateAccountUseCase() {
-        Client expectedClient = Client.create("John", "j@j.com");
+        String clientId = UUID.randomUUID().toString();
+        Client expectedClient = Client.createWithId(clientId, "John", "j@j.com");
 
-        when(clientGateway.find(expectedClient.getId().toString())).thenReturn(Optional.of(expectedClient));
+        when(clientGateway.find(clientId)).thenReturn(Optional.of(expectedClient));
 
         CreateAccountUseCaseOutputDto output = useCase.execute(CreateAccountUseCaseInputDto.builder()
-                .clientId(expectedClient.getId().toString())
+                .clientId(clientId)
                 .build());
 
-        verify(clientGateway, times(1)).find(expectedClient.getId().toString());
+        verify(clientGateway, times(1)).find(clientId);
         verify(accountGateway, times(1)).save(any(Account.class));
 
         assertThat(output.getId()).isNotNull();
+        assertDoesNotThrow(() -> UUID.fromString(output.getId()));
     }
 
     @Test

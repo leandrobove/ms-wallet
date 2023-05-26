@@ -8,7 +8,10 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.UUID;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -31,6 +34,7 @@ public class CreateClientUseCaseTest {
         verify(clientGateway, times(1)).save(any(Client.class));
 
         assertThat(output.getId()).isNotNull();
+        assertDoesNotThrow(() -> UUID.fromString(output.getId()));
         assertThat(output.getName()).isEqualTo("John");
         assertThat(output.getEmail()).isEqualTo("j@j.com");
         assertThat(output.getCreatedAt()).isNotNull();
