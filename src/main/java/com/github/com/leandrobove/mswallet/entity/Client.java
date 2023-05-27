@@ -81,8 +81,5 @@ public class Client {
         if (this.email == "") {
             throw new IllegalArgumentException("email is required");
         }
-        if (this.accounts == null) {
-            throw new IllegalArgumentException("accounts are required");
-        }
     }
 }

@@ -52,29 +52,29 @@ public class Account {
     }
 
     public void credit(BigDecimal amount) {
-        if (amount == null) {
-            throw new IllegalArgumentException("amount is required");
-        }
-        if (amount.doubleValue() <= 0) {
-            throw new IllegalArgumentException("amount must be a positive number");
-        }
+        validateAmount(amount);
 
         this.balance = this.balance.add(amount);
         this.updatedAt = OffsetDateTime.now();
     }
 
     public void debit(BigDecimal amount) {
-        if (amount == null) {
-            throw new IllegalArgumentException("amount is required");
-        }
-        if (amount.doubleValue() <= 0) {
-            throw new IllegalArgumentException("amount must be a positive number");
-        }
+        validateAmount(amount);
+
         if (amount.compareTo(this.balance) > 0) {
             throw new IllegalArgumentException("insufficient funds");
         }
 
         this.balance = this.balance.subtract(amount);
         this.updatedAt = OffsetDateTime.now();
+    }
+
+    private static void validateAmount(BigDecimal amount) {
+        if (amount == null) {
+            throw new IllegalArgumentException("amount is required");
+        }
+        if (amount.doubleValue() <= 0) {
+            throw new IllegalArgumentException("amount must be a positive number");
+        }
     }
 }

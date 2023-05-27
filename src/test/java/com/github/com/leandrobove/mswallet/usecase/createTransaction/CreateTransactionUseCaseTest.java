@@ -3,6 +3,7 @@ package com.github.com.leandrobove.mswallet.usecase.createTransaction;
 import com.github.com.leandrobove.mswallet.entity.Account;
 import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.entity.Transaction;
+import com.github.com.leandrobove.mswallet.event.TransactionCreatedEvent;
 import com.github.com.leandrobove.mswallet.exception.EntityNotFoundException;
 import com.github.com.leandrobove.mswallet.gateway.AccountGateway;
 import com.github.com.leandrobove.mswallet.gateway.TransactionGateway;
@@ -12,6 +13,8 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.context.ApplicationEvent;
+import org.springframework.context.ApplicationEventPublisher;
 
 import java.math.BigDecimal;
 import java.util.Optional;
@@ -30,6 +33,9 @@ public class CreateTransactionUseCaseTest {
 
     @Mock
     private AccountGateway accountGateway;
+
+    @Mock
+    private ApplicationEventPublisher eventPublisher;
 
     @InjectMocks
     private CreateTransactionUseCase useCase;
@@ -51,6 +57,7 @@ public class CreateTransactionUseCaseTest {
         //mock
         when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
         when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
+        doNothing().when(eventPublisher).publishEvent(any(ApplicationEvent.class));
 
         CreateTransactionUseCaseOutputDto output = useCase.execute(CreateTransactionUseCaseInputDto.builder()
                 .accountFromId(accountFrom.getId().toString())
@@ -60,6 +67,7 @@ public class CreateTransactionUseCaseTest {
 
         verify(accountGateway, times(2)).find(anyString());
         verify(transactionGateway, times(1)).create(any(Transaction.class));
+        verify(eventPublisher, times(1)).publishEvent(any(ApplicationEvent.class));
 
         assertThat(output.getTransactionId()).isNotNull();
         assertDoesNotThrow(() -> UUID.fromString(output.getTransactionId()));
@@ -81,6 +89,7 @@ public class CreateTransactionUseCaseTest {
         assertThat(ex.getMessage()).isEqualTo("accountFrom id " + accountId + " not found");
         verify(accountGateway, times(1)).find(anyString());
         verify(transactionGateway, never()).create(any(Transaction.class));
+        verify(eventPublisher, never()).publishEvent(any(ApplicationEvent.class));
     }
 
     @Test
@@ -105,5 +114,6 @@ public class CreateTransactionUseCaseTest {
         assertThat(ex.getMessage()).isEqualTo("accountTo id " + accountToId + " not found");
         verify(accountGateway, times(2)).find(anyString());
         verify(transactionGateway, never()).create(any(Transaction.class));
+        verify(eventPublisher, never()).publishEvent(any(ApplicationEvent.class));
     }
 }
