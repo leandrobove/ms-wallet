@@ -1,17 +1,21 @@
 package com.github.com.leandrobove.mswallet.usecase.createClient;
 
 import com.github.com.leandrobove.mswallet.entity.Client;
+import com.github.com.leandrobove.mswallet.exception.EmailAlreadyExistsException;
 import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -39,6 +43,19 @@ public class CreateClientUseCaseTest {
         assertThat(output.getEmail()).isEqualTo("j@j.com");
         assertThat(output.getCreatedAt()).isNotNull();
         assertThat(output.getUpdatedAt()).isNotNull();
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenEmailAlreadyExists() {
+        String email = "j@j.com";
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "j@j.com")));
+
+        assertThrows(EmailAlreadyExistsException.class, () -> {
+            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+                    .name("John")
+                    .email("j@j.com")
+                    .build());
+        });
     }
 
 }
