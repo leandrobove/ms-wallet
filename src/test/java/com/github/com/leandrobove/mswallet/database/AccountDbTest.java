@@ -4,11 +4,10 @@ import com.github.com.leandrobove.mswallet.entity.Account;
 import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.gateway.AccountGateway;
 import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -16,6 +15,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ActiveProfiles("test")
 public class AccountDbTest {
 
     @Autowired
@@ -23,15 +23,6 @@ public class AccountDbTest {
 
     @Autowired
     private ClientGateway clientGateway;
-
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
-
-    @BeforeEach
-    public void setup() {
-        jdbcTemplate.update("delete from account");
-        jdbcTemplate.update("delete from client");
-    }
 
     @Test
     public void shouldSaveAccount() {

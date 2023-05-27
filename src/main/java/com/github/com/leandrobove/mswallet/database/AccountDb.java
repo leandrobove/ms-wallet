@@ -2,8 +2,6 @@ package com.github.com.leandrobove.mswallet.database;
 
 import com.github.com.leandrobove.mswallet.entity.Account;
 import com.github.com.leandrobove.mswallet.gateway.AccountGateway;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -12,8 +10,6 @@ import java.util.Optional;
 @Repository
 public class AccountDb implements AccountGateway {
     private final JdbcTemplate jdbcTemplate;
-
-    private final Logger log = LoggerFactory.getLogger(AccountDb.class);
 
     public AccountDb(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;

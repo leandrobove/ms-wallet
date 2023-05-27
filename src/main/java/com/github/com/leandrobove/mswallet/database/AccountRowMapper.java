@@ -5,7 +5,6 @@ import com.github.com.leandrobove.mswallet.entity.Client;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.time.OffsetDateTime;
 
