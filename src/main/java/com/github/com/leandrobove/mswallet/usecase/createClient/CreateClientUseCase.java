@@ -2,7 +2,10 @@ package com.github.com.leandrobove.mswallet.usecase.createClient;
 
 import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+@Service
 public class CreateClientUseCase {
     private final ClientGateway clientGateway;
 
@@ -10,6 +13,7 @@ public class CreateClientUseCase {
         this.clientGateway = clientGateway;
     }
 
+    @Transactional
     public CreateClientUseCaseOutputDto execute(CreateClientUseCaseInputDto input) {
         Client client = Client.create(input.getName(), input.getEmail());
 
