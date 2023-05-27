@@ -4,20 +4,24 @@ import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.Optional;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@DataJdbcTest
 public class ClientDbTest {
+    private JdbcTemplate jdbcTemplate;
+    private ClientGateway clientGateway;
 
     @Autowired
-    private ClientGateway clientGateway;
+    public ClientDbTest(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
+        this.clientGateway = new ClientDb(jdbcTemplate);
+    }
 
     @Test
     public void shouldSaveClient() {

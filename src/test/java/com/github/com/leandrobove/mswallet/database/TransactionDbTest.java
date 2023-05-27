@@ -8,29 +8,28 @@ import com.github.com.leandrobove.mswallet.gateway.ClientGateway;
 import com.github.com.leandrobove.mswallet.gateway.TransactionGateway;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.math.BigDecimal;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ActiveProfiles("test")
+@DataJdbcTest
 public class TransactionDbTest {
 
-    @Autowired
     private AccountGateway accountGateway;
-
-    @Autowired
     private ClientGateway clientGateway;
-
-    @Autowired
     private TransactionGateway transactionGateway;
+    private JdbcTemplate jdbcTemplate;
 
     @Autowired
-    private JdbcTemplate jdbcTemplate;
+    public TransactionDbTest(JdbcTemplate jdbcTemplate) {
+        this.accountGateway = new AccountDb(jdbcTemplate);
+        this.clientGateway = new ClientDb(jdbcTemplate);
+        this.transactionGateway = new TransactionDb(jdbcTemplate);
+        this.jdbcTemplate = jdbcTemplate;
+    }
 
     @Test
     public void shouldSaveAccount() {
