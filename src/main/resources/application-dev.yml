@@ -2,14 +2,11 @@ spring:
   #Database
   datasource:
     name: wallet
-    driver-class-name: org.h2.Driver
-    jdbc-url: jdbc:h2:mem:walletdb;DB_CLOSE_DELAY=-1
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    jdbc-url: jdbc:mysql://${wallet-db:localhost}/walletdb?serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: user
+    password: password
     pool-size: 30
-  h2:
-    console:
-      enabled: true
 
 server:
   port: 8080
