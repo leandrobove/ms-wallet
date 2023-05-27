@@ -8,5 +8,7 @@ public interface ClientGateway {
 
     Optional<Client> find(String id);
 
+    Optional<Client> findByEmail(String email);
+
     void save(Client client);
 }

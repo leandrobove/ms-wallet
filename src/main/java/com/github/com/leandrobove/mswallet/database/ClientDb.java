@@ -27,6 +27,16 @@ public class ClientDb implements ClientGateway {
     }
 
     @Override
+    public Optional<Client> findByEmail(String email) {
+        String sql = """
+                SELECT id, name, email, created_at, updated_at FROM client WHERE email = ?;
+                """;
+        return jdbcTemplate.query(sql, new ClientRowMapper(), email)
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public void save(Client client) {
         String sql = """
                 INSERT INTO client(id, name, email, created_at, updated_at) VALUES(?,?,?,?,?);

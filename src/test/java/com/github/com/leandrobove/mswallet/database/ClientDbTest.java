@@ -43,4 +43,21 @@ public class ClientDbTest {
 
         assertThat(client).isEqualTo(Optional.empty());
     }
+
+    @Test
+    public void shouldFindClientByEmail() {
+        Client client = Client.create("John", "j@j.com");
+        clientGateway.save(client);
+
+        Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail());
+
+        assertThat(clientOptional).isPresent();
+        assertThat(clientOptional.get().getEmail()).isEqualTo(client.getEmail());
+    }
+
+    @Test
+    public void shouldNotFindClientByEmail() {
+        Optional<Client> clientOptional = clientGateway.findByEmail("nonexistingemail@j.com");
+        assertThat(clientOptional).isEmpty();
+    }
 }
