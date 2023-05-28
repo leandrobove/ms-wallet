@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
 import org.springframework.jdbc.core.JdbcTemplate;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,5 +57,21 @@ public class AccountDbTest {
     public void shouldNotFindAccount() {
         Optional<Account> account = accountGateway.find(UUID.randomUUID().toString());
         assertThat(account).isEqualTo(Optional.empty());
+    }
+
+    @Test
+    public void shouldUpdateAccountBalance() {
+        Client client = Client.create("John", "j@j.com");
+        clientGateway.save(client);
+        assertThat(clientGateway.find(client.getId().toString())).isPresent();
+
+        Account account = Account.create(client);
+        accountGateway.save(account);
+        assertThat(accountGateway.find(account.getId().toString())).isPresent();
+
+        account.credit(new BigDecimal(1000.00));
+        accountGateway.updateBalance(account);
+        Account accountUpdated = accountGateway.find(account.getId().toString()).get();
+        assertThat(accountUpdated.getBalance().compareTo(new BigDecimal(1000.00))).isEqualTo(0);
     }
 }

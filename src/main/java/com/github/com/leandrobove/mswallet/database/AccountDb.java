@@ -42,4 +42,13 @@ public class AccountDb implements AccountGateway {
         jdbcTemplate.update(sql, account.getId().toString(), account.getClient().getId().toString(), account.getBalance(),
                 account.getCreatedAt(), account.getUpdatedAt());
     }
+
+    @Override
+    public void updateBalance(Account account) {
+        var sql = """
+                UPDATE account SET balance = ? WHERE id = ?;
+                """;
+
+        jdbcTemplate.update(sql, account.getBalance(), account.getId().toString());
+    }
 }

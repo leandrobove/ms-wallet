@@ -9,4 +9,6 @@ public interface AccountGateway {
     Optional<Account> find(String id);
 
     void save(Account account);
+
+    void updateBalance(Account account);
 }
