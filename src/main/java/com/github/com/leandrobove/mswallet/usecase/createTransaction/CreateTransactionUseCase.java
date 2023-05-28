@@ -35,6 +35,10 @@ public class CreateTransactionUseCase {
         //create transaction object
         Transaction transaction = new Transaction(accountFrom, accountTo, input.getAmount());
 
+        //update account balance
+        accountGateway.updateBalance(accountFrom);
+        accountGateway.updateBalance(accountTo);
+
         //persist object into the database
         transactionGateway.create(transaction);
 
