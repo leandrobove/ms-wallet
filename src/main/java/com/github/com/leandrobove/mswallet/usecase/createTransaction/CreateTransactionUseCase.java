@@ -44,6 +44,9 @@ public class CreateTransactionUseCase {
 
         CreateTransactionUseCaseOutputDto output = CreateTransactionUseCaseOutputDto.builder()
                 .transactionId(transaction.getId().toString())
+                .accountIdFrom(accountFrom.getId().toString())
+                .accountIdTo(accountTo.getId().toString())
+                .amount(transaction.getAmount())
                 .build();
 
         //publish event

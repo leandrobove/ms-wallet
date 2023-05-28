@@ -70,6 +70,9 @@ public class CreateTransactionUseCaseTest {
         verify(eventPublisher, times(1)).publishEvent(any(ApplicationEvent.class));
 
         assertThat(output.getTransactionId()).isNotNull();
+        assertThat(output.getAccountIdFrom()).isEqualTo(accountFrom.getId().toString());
+        assertThat(output.getAccountIdTo()).isEqualTo(accountTo.getId().toString());
+        assertThat(output.getAmount().compareTo(new BigDecimal(500.00))).isEqualTo(0);
         assertDoesNotThrow(() -> UUID.fromString(output.getTransactionId()));
     }
 
