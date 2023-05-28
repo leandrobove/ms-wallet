@@ -1,3 +1,9 @@
 spring:
   application:
     name: ms-wallet
+
+  # Serialization - Jackson
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-ignored-properties: true

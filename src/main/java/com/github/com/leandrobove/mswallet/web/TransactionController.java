@@ -3,6 +3,7 @@ package com.github.com.leandrobove.mswallet.web;
 import com.github.com.leandrobove.mswallet.usecase.createTransaction.CreateTransactionUseCase;
 import com.github.com.leandrobove.mswallet.usecase.createTransaction.CreateTransactionUseCaseInputDto;
 import com.github.com.leandrobove.mswallet.usecase.createTransaction.CreateTransactionUseCaseOutputDto;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class TransactionController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public CreateTransactionUseCaseOutputDto create(@RequestBody CreateTransactionUseCaseInputDto input) {
+    public CreateTransactionUseCaseOutputDto create(@RequestBody @Valid CreateTransactionUseCaseInputDto input) {
         return createTransactionUseCase.execute(input);
     }
 }
