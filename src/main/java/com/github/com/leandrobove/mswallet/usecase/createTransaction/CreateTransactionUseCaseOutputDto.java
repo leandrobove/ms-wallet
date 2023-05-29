@@ -3,11 +3,13 @@ package com.github.com.leandrobove.mswallet.usecase.createTransaction;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.ToString;
 
 import java.math.BigDecimal;
 
 @Builder
 @Getter
+@ToString
 public class CreateTransactionUseCaseOutputDto {
     @JsonProperty("id")
     private String transactionId;
