@@ -2,7 +2,9 @@ package com.github.com.leandrobove.mswallet.usecase.createTransaction;
 
 import com.github.com.leandrobove.mswallet.entity.Account;
 import com.github.com.leandrobove.mswallet.entity.Transaction;
+import com.github.com.leandrobove.mswallet.event.BalanceUpdatedEvent;
 import com.github.com.leandrobove.mswallet.event.TransactionCreatedEvent;
+import com.github.com.leandrobove.mswallet.event.dto.BalanceUpdatedEventPayload;
 import com.github.com.leandrobove.mswallet.exception.EntityNotFoundException;
 import com.github.com.leandrobove.mswallet.gateway.AccountGateway;
 import com.github.com.leandrobove.mswallet.gateway.TransactionGateway;
@@ -49,8 +51,12 @@ public class CreateTransactionUseCase {
                 .amount(transaction.getAmount())
                 .build();
 
-        //publish event
+        var balanceUpdatedEventPayload = new BalanceUpdatedEventPayload(accountFrom.getId().toString(),
+                accountTo.getId().toString(), accountFrom.getBalance(), accountTo.getBalance());
+
+        //publish events
         eventPublisher.publishEvent(new TransactionCreatedEvent(output));
+        eventPublisher.publishEvent(new BalanceUpdatedEvent(balanceUpdatedEventPayload));
 
         return output;
     }
