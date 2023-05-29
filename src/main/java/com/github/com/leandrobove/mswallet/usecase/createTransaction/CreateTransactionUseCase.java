@@ -50,7 +50,7 @@ public class CreateTransactionUseCase {
                 .build();
 
         //publish event
-        eventPublisher.publishEvent(new TransactionCreatedEvent(this, output));
+        eventPublisher.publishEvent(new TransactionCreatedEvent(output));
 
         return output;
     }

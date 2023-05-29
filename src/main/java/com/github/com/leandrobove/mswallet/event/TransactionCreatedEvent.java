@@ -2,14 +2,15 @@ package com.github.com.leandrobove.mswallet.event;
 
 import com.github.com.leandrobove.mswallet.usecase.createTransaction.CreateTransactionUseCaseOutputDto;
 import lombok.Getter;
-import org.springframework.context.ApplicationEvent;
+
+import java.io.Serializable;
 
 @Getter
-public class TransactionCreatedEvent extends ApplicationEvent {
+public class TransactionCreatedEvent extends BaseEvent implements Serializable {
     private CreateTransactionUseCaseOutputDto payload;
 
-    public TransactionCreatedEvent(Object source, CreateTransactionUseCaseOutputDto payload) {
-        super(source);
+    public TransactionCreatedEvent(CreateTransactionUseCaseOutputDto payload) {
+        super("TransactionCreated");
         this.payload = payload;
     }
 }

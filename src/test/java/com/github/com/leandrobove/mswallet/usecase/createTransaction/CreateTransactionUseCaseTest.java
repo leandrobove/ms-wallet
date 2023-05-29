@@ -3,7 +3,7 @@ package com.github.com.leandrobove.mswallet.usecase.createTransaction;
 import com.github.com.leandrobove.mswallet.entity.Account;
 import com.github.com.leandrobove.mswallet.entity.Client;
 import com.github.com.leandrobove.mswallet.entity.Transaction;
-import com.github.com.leandrobove.mswallet.event.TransactionCreatedEvent;
+import com.github.com.leandrobove.mswallet.event.BaseEvent;
 import com.github.com.leandrobove.mswallet.exception.EntityNotFoundException;
 import com.github.com.leandrobove.mswallet.gateway.AccountGateway;
 import com.github.com.leandrobove.mswallet.gateway.TransactionGateway;
@@ -57,7 +57,7 @@ public class CreateTransactionUseCaseTest {
         //mock
         when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
         when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
-        doNothing().when(eventPublisher).publishEvent(any(ApplicationEvent.class));
+        doNothing().when(eventPublisher).publishEvent(any(BaseEvent.class));
 
         CreateTransactionUseCaseOutputDto output = useCase.execute(CreateTransactionUseCaseInputDto.builder()
                 .accountFromId(accountFrom.getId().toString())
@@ -67,7 +67,7 @@ public class CreateTransactionUseCaseTest {
 
         verify(accountGateway, times(2)).find(anyString());
         verify(transactionGateway, times(1)).create(any(Transaction.class));
-        verify(eventPublisher, times(1)).publishEvent(any(ApplicationEvent.class));
+        verify(eventPublisher, times(1)).publishEvent(any(BaseEvent.class));
 
         assertThat(output.getTransactionId()).isNotNull();
         assertThat(output.getAccountIdFrom()).isEqualTo(accountFrom.getId().toString());

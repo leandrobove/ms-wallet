@@ -8,5 +8,8 @@ spring:
     password: password
     pool-size: 30
 
+  kafka:
+    bootstrap-servers: localhost:9092
+
 server:
   port: 8080

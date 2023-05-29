@@ -5,12 +5,13 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 
 @Builder
 @Getter
 @ToString
-public class CreateTransactionUseCaseOutputDto {
+public class CreateTransactionUseCaseOutputDto implements Serializable {
     @JsonProperty("id")
     private String transactionId;
 
