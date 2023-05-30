@@ -1,9 +1,9 @@
 version: "3.9"
 
 services:
-  wallet-db:
+  wallet-core-db:
     image: mysql:8
-    container_name: wallet-db
+    container_name: wallet-core-db
     ports:
       - "3306:3306"
     environment:
@@ -15,7 +15,7 @@ services:
       - ./docker/walletdb:/var/lib/mysql
     restart: always
     networks:
-      - wallet-network
+      - wallet-core-network
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
@@ -68,5 +68,5 @@ services:
       PORT: 9021
 
 networks:
-  wallet-network:
+  wallet-core-network:
     driver: bridge

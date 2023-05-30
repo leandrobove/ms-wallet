@@ -1,1 +1,2 @@
-# Wallet Microservice
+# Digital Wallet Microservice
+

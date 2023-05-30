@@ -3,7 +3,7 @@ spring:
   datasource:
     name: wallet
     driver-class-name: com.mysql.cj.jdbc.Driver
-    jdbc-url: jdbc:mysql://${wallet-db:localhost}/walletdb?serverTimezone=UTC&createDatabaseIfNotExist=true
+    jdbc-url: jdbc:mysql://${wallet-core-db:localhost}/walletdb?serverTimezone=UTC&createDatabaseIfNotExist=true
     username: user
     password: password
     pool-size: 30
