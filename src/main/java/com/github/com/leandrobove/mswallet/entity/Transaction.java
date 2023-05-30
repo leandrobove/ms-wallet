@@ -46,6 +46,9 @@ public class Transaction {
         if (this.accountTo == null) {
             throw new IllegalArgumentException("accountTo is required");
         }
+        if (this.amount == null) {
+            throw new IllegalArgumentException("amount is required");
+        }
         if (this.amount.doubleValue() <= 0) {
             throw new IllegalArgumentException("amount must be greater than zero");
         }

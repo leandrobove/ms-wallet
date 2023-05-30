@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
@@ -54,6 +53,29 @@ public class CreateClientUseCaseTest {
             var output = useCase.execute(CreateClientUseCaseInputDto.builder()
                     .name("John")
                     .email("j@j.com")
+                    .build());
+        });
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenNameIsMissing() {
+        String email = "j@j.com";
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+                    .name("")
+                    .email("j@j.com")
+                    .build());
+        });
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenEmailIsMissing() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+                    .name("John")
+                    .email("")
                     .build());
         });
     }

@@ -65,4 +65,13 @@ public class CreateAccountUseCaseTest {
         verify(clientGateway, times(1)).find(clientId);
         verify(accountGateway, never()).save(any(Account.class));
     }
+
+    @Test
+    public void shouldNotCreateAccountWhenClientIdIsMissing() {
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            CreateAccountUseCaseOutputDto output = useCase.execute(CreateAccountUseCaseInputDto.builder()
+                    .clientId("")
+                    .build());
+        });
+    }
 }

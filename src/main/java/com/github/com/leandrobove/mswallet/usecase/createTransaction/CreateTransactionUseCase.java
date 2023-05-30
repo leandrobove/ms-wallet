@@ -12,6 +12,8 @@ import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import static java.util.Objects.isNull;
+
 @Service
 public class CreateTransactionUseCase {
     private final TransactionGateway transactionGateway;
@@ -26,6 +28,8 @@ public class CreateTransactionUseCase {
 
     @Transactional
     public CreateTransactionUseCaseOutputDto execute(CreateTransactionUseCaseInputDto input) throws EntityNotFoundException {
+        this.validateInput(input);
+
         //find accountFromById
         Account accountFrom = accountGateway.find(input.getAccountFromId()).orElseThrow(
                 () -> new EntityNotFoundException(String.format("accountFrom id %s not found", input.getAccountFromId())));
@@ -59,5 +63,14 @@ public class CreateTransactionUseCase {
         eventPublisher.publishEvent(new BalanceUpdatedEvent(balanceUpdatedEventPayload));
 
         return output;
+    }
+
+    private void validateInput(CreateTransactionUseCaseInputDto input) {
+        if (isNull(input.getAccountFromId()) || input.getAccountFromId() == "") {
+            throw new IllegalArgumentException("account id from is required");
+        }
+        if (isNull(input.getAccountToId()) || input.getAccountToId() == "") {
+            throw new IllegalArgumentException("account id to is required");
+        }
     }
 }
