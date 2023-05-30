@@ -12,7 +12,7 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     volumes:
-      - ./walletdb:/var/lib/mysql
+      - ./docker/walletdb:/var/lib/mysql
     restart: always
     networks:
       - wallet-network
