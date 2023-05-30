@@ -177,4 +177,36 @@ public class CreateTransactionUseCaseTest {
         verify(eventPublisher, never()).publishEvent(any(TransactionCreatedEvent.class));
         verify(eventPublisher, never()).publishEvent(any(BalanceUpdatedEvent.class));
     }
+
+    @Test
+    public void shouldNotCreateTransactionWhenAmountIsEqualToZero() {
+        Client client1 = Client.create("John", "john@j.com");
+        Client client2 = Client.create("Jack Doe", "jackdoe@j.com");
+
+        Account accountFrom = Account.create(client1);
+        Account accountTo = Account.create(client2);
+
+        client1.addAccount(accountFrom);
+        client2.addAccount(accountTo);
+
+        accountFrom.credit(new BigDecimal(1000.00));
+        accountTo.credit(new BigDecimal(1000.00));
+
+        //mock
+        when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
+        when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
+
+        IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
+            useCase.execute(CreateTransactionUseCaseInputDto.builder()
+                    .accountFromId(accountFrom.getId().toString())
+                    .accountToId(accountTo.getId().toString())
+                    .amount(new BigDecimal(0.00))
+                    .build());
+        });
+        assertThat(ex.getMessage()).isEqualTo("amount must be greater than zero");
+
+        verify(transactionGateway, never()).create(any(Transaction.class));
+        verify(eventPublisher, never()).publishEvent(any(TransactionCreatedEvent.class));
+        verify(eventPublisher, never()).publishEvent(any(BalanceUpdatedEvent.class));
+    }
 }
