@@ -4,6 +4,7 @@ import com.github.leandrobove.mswallet.broker.MessageBrokerInterface;
 import com.github.leandrobove.mswallet.event.TransactionCreatedEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.event.TransactionalEventListener;
 
@@ -18,6 +19,7 @@ public class TransactionCreatedEventListener {
     }
 
     @TransactionalEventListener
+    @Async
     public void handle(TransactionCreatedEvent event) {
         broker.publishMessage("transactions", event);
 
