@@ -10,8 +10,13 @@ spring:
 
   cloud:
     stream:
-      binder:
-        brokers: localhost:9092
+      bindings:
+        balanceUpdatedSupplier-out-0:
+          destination: wallet-core.v1.event.balance-updated
+          contentType: application/json
+        transactionCreatedSupplier-out-0:
+          destination: wallet-core.v1.event.transaction-created
+          contentType: application/json
 
 server:
   port: 8080
