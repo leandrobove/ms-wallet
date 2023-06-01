@@ -18,6 +18,7 @@
 
     <modules>
         <module>ms-wallet-core</module>
+        <module>ms-balance</module>
     </modules>
 
     <properties>

@@ -1,0 +1,30 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: ms-balance
+
+  # Serialization - Jackson
+  jackson:
+    deserialization:
+      fail-on-unknown-properties: true
+      fail-on-ignored-properties: true
+
+# Metrics - Spring Actuator
+management:
+  endpoints:
+    enabled-by-default: false
+    web:
+      exposure:
+        include: "metrics,health,info"
+  metrics:
+    enable:
+      executor: false
+  endpoint:
+    health:
+      enabled: true
+    metrics:
+      enabled: true
+    info:
+      enabled: true
