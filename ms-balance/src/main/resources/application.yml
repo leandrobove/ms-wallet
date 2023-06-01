@@ -5,6 +5,11 @@ spring:
   application:
     name: ms-balance
 
+  # Database - MongoDB
+  data:
+    mongodb:
+      uri: mongodb://mongoadmin:secret@127.0.0.1:27017/balancedb?authSource=admin
+
   # Serialization - Jackson
   jackson:
     deserialization:

@@ -17,6 +17,21 @@ services:
     networks:
       - wallet-core-network
 
+  balance-db:
+    image: mongo:6.0.6
+    container_name: balancedb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_DATABASE: balancedb
+      MONGO_INITDB_ROOT_USERNAME: mongoadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    volumes:
+      - ./docker/balancedb:/data/db
+    restart: always
+    networks:
+      - balance-network
+
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
     container_name: zookeeper
@@ -69,4 +84,6 @@ services:
 
 networks:
   wallet-core-network:
+    driver: bridge
+  balance-network:
     driver: bridge
