@@ -11,6 +11,15 @@ spring:
       fail-on-unknown-properties: true
       fail-on-ignored-properties: true
 
+  cloud:
+    stream:
+      function:
+        definition: BalanceUpdatedEventListener
+      bindings:
+        balanceUpdatedEventListener-in-0:
+          destination: wallet-core.v1.event.balance-updated
+
+
 # Metrics - Spring Actuator
 management:
   endpoints:
