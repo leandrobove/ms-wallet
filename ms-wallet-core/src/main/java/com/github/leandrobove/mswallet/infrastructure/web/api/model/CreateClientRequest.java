@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.infrastructure.web.model;
+package com.github.leandrobove.mswallet.infrastructure.web.api.model;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.infrastructure.web.exception;
+package com.github.leandrobove.mswallet.infrastructure.web.api.exception;
 
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
@@ -29,7 +29,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String message = ex.getMessage();
 
-        return new ResponseEntity<>(new Error(status.value(), message, OffsetDateTime.now()), status);
+        return new ResponseEntity<>(new ApiError(status.value(), message, OffsetDateTime.now()), status);
     }
 
     @ExceptionHandler(EntityNotFoundException.class)
@@ -37,7 +37,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.NOT_FOUND;
         String message = ex.getMessage();
 
-        return new ResponseEntity<>(new Error(status.value(), message, OffsetDateTime.now()), status);
+        return new ResponseEntity<>(new ApiError(status.value(), message, OffsetDateTime.now()), status);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
@@ -45,7 +45,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String message = ex.getMessage();
 
-        return new ResponseEntity<>(new Error(status.value(), message, OffsetDateTime.now()), status);
+        return new ResponseEntity<>(new ApiError(status.value(), message, OffsetDateTime.now()), status);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
             messageBuilder.append(message + ", ");
         });
 
-        return new ResponseEntity<>(new Error(status.value(), messageBuilder.toString()
+        return new ResponseEntity<>(new ApiError(status.value(), messageBuilder.toString()
                 .substring(0, messageBuilder.toString().length() - 2), OffsetDateTime.now()), status);
     }
 }

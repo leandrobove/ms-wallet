@@ -1,17 +1,14 @@
-package com.github.leandrobove.mswallet.infrastructure.web.controller;
+package com.github.leandrobove.mswallet.infrastructure.web.api.controller;
 
 import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCase;
 import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCaseInput;
-import com.github.leandrobove.mswallet.infrastructure.web.model.CreateTransactionRequest;
-import com.github.leandrobove.mswallet.infrastructure.web.model.CreateTransactionResponse;
-import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import com.github.leandrobove.mswallet.infrastructure.web.api.TransactionAPI;
+import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateTransactionRequest;
+import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateTransactionResponse;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/transactions", produces = MediaType.APPLICATION_JSON_VALUE)
-public class TransactionController {
+public class TransactionController implements TransactionAPI {
 
     private final CreateTransactionUseCase createTransactionUseCase;
 
@@ -19,9 +16,8 @@ public class TransactionController {
         this.createTransactionUseCase = createTransactionUseCase;
     }
 
-    @PostMapping
-    @ResponseStatus(HttpStatus.CREATED)
-    public CreateTransactionResponse create(@RequestBody @Valid CreateTransactionRequest request) {
+    @Override
+    public CreateTransactionResponse create(CreateTransactionRequest request) {
 
         var input = CreateTransactionUseCaseInput.from(
                 request.getAccountFromId(),
