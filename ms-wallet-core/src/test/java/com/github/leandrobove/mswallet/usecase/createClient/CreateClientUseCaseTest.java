@@ -1,8 +1,11 @@
 package com.github.leandrobove.mswallet.usecase.createClient;
 
-import com.github.leandrobove.mswallet.entity.Client;
-import com.github.leandrobove.mswallet.exception.EmailAlreadyExistsException;
-import com.github.leandrobove.mswallet.gateway.ClientGateway;
+import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCase;
+import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseInput;
+import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseOutput;
+import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
+import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -29,7 +32,7 @@ public class CreateClientUseCaseTest {
 
     @Test
     public void shouldCreateClientUseCase() {
-        CreateClientUseCaseOutputDto output = useCase.execute(CreateClientUseCaseInputDto.builder()
+        CreateClientUseCaseOutput output = useCase.execute(CreateClientUseCaseInput.builder()
                 .name("John")
                 .email("j@j.com")
                 .build());
@@ -50,7 +53,7 @@ public class CreateClientUseCaseTest {
         when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "j@j.com")));
 
         assertThrows(EmailAlreadyExistsException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+            var output = useCase.execute(CreateClientUseCaseInput.builder()
                     .name("John")
                     .email("j@j.com")
                     .build());
@@ -63,7 +66,7 @@ public class CreateClientUseCaseTest {
         when(clientGateway.findByEmail(email)).thenReturn(Optional.empty());
 
         assertThrows(IllegalArgumentException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+            var output = useCase.execute(CreateClientUseCaseInput.builder()
                     .name("")
                     .email("j@j.com")
                     .build());
@@ -73,7 +76,7 @@ public class CreateClientUseCaseTest {
     @Test
     public void shouldNotCreateClientWhenEmailIsMissing() {
         assertThrows(IllegalArgumentException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInputDto.builder()
+            var output = useCase.execute(CreateClientUseCaseInput.builder()
                     .name("John")
                     .email("")
                     .build());

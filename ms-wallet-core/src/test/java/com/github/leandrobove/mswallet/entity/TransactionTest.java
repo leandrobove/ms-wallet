@@ -1,5 +1,8 @@
 package com.github.leandrobove.mswallet.entity;
 
+import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Transaction;
 import org.junit.jupiter.api.Test;
 
 import java.math.BigDecimal;

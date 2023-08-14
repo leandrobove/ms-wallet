@@ -1,11 +1,14 @@
 package com.github.leandrobove.mswallet.database;
 
-import com.github.leandrobove.mswallet.entity.Account;
-import com.github.leandrobove.mswallet.entity.Client;
-import com.github.leandrobove.mswallet.entity.Transaction;
-import com.github.leandrobove.mswallet.gateway.AccountGateway;
-import com.github.leandrobove.mswallet.gateway.ClientGateway;
-import com.github.leandrobove.mswallet.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
+import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
+import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Transaction;
+import com.github.leandrobove.mswallet.infrastructure.database.AccountDb;
+import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
+import com.github.leandrobove.mswallet.infrastructure.database.TransactionDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -37,8 +40,8 @@ public class TransactionDbTest {
         Client client2 = Client.create("Mariah", "m@j.com");
         clientGateway.save(client1);
         clientGateway.save(client2);
-        assertThat(clientGateway.find(client1.getId().toString())).isPresent();
-        assertThat(clientGateway.find(client2.getId().toString())).isPresent();
+        assertThat(clientGateway.findById(client1.getId().toString())).isPresent();
+        assertThat(clientGateway.findById(client2.getId().toString())).isPresent();
 
         Account accountFrom = Account.create(client1);
         Account accountTo = Account.create(client2);

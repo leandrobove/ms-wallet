@@ -1,13 +1,16 @@
 package com.github.leandrobove.mswallet.usecase.createTransaction;
 
-import com.github.leandrobove.mswallet.entity.Account;
-import com.github.leandrobove.mswallet.entity.Client;
-import com.github.leandrobove.mswallet.entity.Transaction;
-import com.github.leandrobove.mswallet.event.BalanceUpdatedEvent;
-import com.github.leandrobove.mswallet.event.TransactionCreatedEvent;
-import com.github.leandrobove.mswallet.exception.EntityNotFoundException;
-import com.github.leandrobove.mswallet.gateway.AccountGateway;
-import com.github.leandrobove.mswallet.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
+import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCase;
+import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCaseInput;
+import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCaseOutput;
+import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Transaction;
+import com.github.leandrobove.mswallet.domain.event.BalanceUpdatedEvent;
+import com.github.leandrobove.mswallet.domain.event.TransactionCreatedEvent;
+import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -55,18 +58,18 @@ public class CreateTransactionUseCaseTest {
         accountTo.credit(new BigDecimal(1000.00));
 
         //mock
-        when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
-        when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
+        when(accountGateway.findById(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
+        when(accountGateway.findById(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
         doNothing().when(eventPublisher).publishEvent(any(TransactionCreatedEvent.class));
         doNothing().when(eventPublisher).publishEvent(any(BalanceUpdatedEvent.class));
 
-        CreateTransactionUseCaseOutputDto output = useCase.execute(CreateTransactionUseCaseInputDto.builder()
+        CreateTransactionUseCaseOutput output = useCase.execute(CreateTransactionUseCaseInput.builder()
                 .accountFromId(accountFrom.getId().toString())
                 .accountToId(accountTo.getId().toString())
                 .amount(new BigDecimal(500.00))
                 .build());
 
-        verify(accountGateway, times(2)).find(anyString());
+        verify(accountGateway, times(2)).findById(anyString());
         verify(transactionGateway, times(1)).create(any(Transaction.class));
         verify(eventPublisher, times(1)).publishEvent(any(TransactionCreatedEvent.class));
         verify(eventPublisher, times(1)).publishEvent(any(BalanceUpdatedEvent.class));
@@ -81,10 +84,10 @@ public class CreateTransactionUseCaseTest {
     @Test
     public void shouldNotCreateTransactionWhenAccountFromNotFound() {
         String accountId = "123";
-        when(accountGateway.find(accountId)).thenThrow(new EntityNotFoundException(String.format("accountFrom id %s not found", accountId)));
+        when(accountGateway.findById(accountId)).thenThrow(new EntityNotFoundException(String.format("accountFrom id %s not found", accountId)));
 
         EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
-            CreateTransactionUseCaseOutputDto output = useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            CreateTransactionUseCaseOutput output = useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId(accountId)
                     .accountToId(UUID.randomUUID().toString())
                     .amount(new BigDecimal(500.00))
@@ -92,7 +95,7 @@ public class CreateTransactionUseCaseTest {
         });
 
         assertThat(ex.getMessage()).isEqualTo("accountFrom id " + accountId + " not found");
-        verify(accountGateway, times(1)).find(anyString());
+        verify(accountGateway, times(1)).findById(anyString());
         verify(transactionGateway, never()).create(any(Transaction.class));
         verify(eventPublisher, never()).publishEvent(any(TransactionCreatedEvent.class));
         verify(eventPublisher, never()).publishEvent(any(BalanceUpdatedEvent.class));
@@ -106,11 +109,11 @@ public class CreateTransactionUseCaseTest {
         accountFrom.credit(new BigDecimal(1000.00));
 
         String accountToId = "123";
-        when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
-        when(accountGateway.find(accountToId)).thenThrow(new EntityNotFoundException(String.format("accountTo id %s not found", accountToId)));
+        when(accountGateway.findById(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
+        when(accountGateway.findById(accountToId)).thenThrow(new EntityNotFoundException(String.format("accountTo id %s not found", accountToId)));
 
         EntityNotFoundException ex = assertThrows(EntityNotFoundException.class, () -> {
-            CreateTransactionUseCaseOutputDto output = useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            CreateTransactionUseCaseOutput output = useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId(accountFrom.getId().toString())
                     .accountToId(accountToId)
                     .amount(new BigDecimal(500.00))
@@ -118,7 +121,7 @@ public class CreateTransactionUseCaseTest {
         });
 
         assertThat(ex.getMessage()).isEqualTo("accountTo id " + accountToId + " not found");
-        verify(accountGateway, times(2)).find(anyString());
+        verify(accountGateway, times(2)).findById(anyString());
         verify(transactionGateway, never()).create(any(Transaction.class));
         verify(eventPublisher, never()).publishEvent(any(TransactionCreatedEvent.class));
         verify(eventPublisher, never()).publishEvent(any(BalanceUpdatedEvent.class));
@@ -127,7 +130,7 @@ public class CreateTransactionUseCaseTest {
     @Test
     public void shouldNotCreateTransactionWhenAccountFromIsMissing() {
         assertThrows(IllegalArgumentException.class, () -> {
-            useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId("")
                     .accountToId(UUID.randomUUID().toString())
                     .amount(new BigDecimal(500.00))
@@ -138,7 +141,7 @@ public class CreateTransactionUseCaseTest {
     @Test
     public void shouldNotCreateTransactionWhenAccountToIsMissing() {
         assertThrows(IllegalArgumentException.class, () -> {
-            useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId(UUID.randomUUID().toString())
                     .accountToId("")
                     .amount(new BigDecimal(500.00))
@@ -161,11 +164,11 @@ public class CreateTransactionUseCaseTest {
         accountTo.credit(new BigDecimal(1000.00));
 
         //mock
-        when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
-        when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
+        when(accountGateway.findById(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
+        when(accountGateway.findById(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId(accountFrom.getId().toString())
                     .accountToId(accountTo.getId().toString())
                     .amount(null)
@@ -193,11 +196,11 @@ public class CreateTransactionUseCaseTest {
         accountTo.credit(new BigDecimal(1000.00));
 
         //mock
-        when(accountGateway.find(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
-        when(accountGateway.find(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
+        when(accountGateway.findById(accountFrom.getId().toString())).thenReturn(Optional.of(accountFrom));
+        when(accountGateway.findById(accountTo.getId().toString())).thenReturn(Optional.of(accountTo));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            useCase.execute(CreateTransactionUseCaseInputDto.builder()
+            useCase.execute(CreateTransactionUseCaseInput.builder()
                     .accountFromId(accountFrom.getId().toString())
                     .accountToId(accountTo.getId().toString())
                     .amount(new BigDecimal(0.00))
