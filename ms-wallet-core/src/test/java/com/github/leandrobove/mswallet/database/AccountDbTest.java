@@ -39,7 +39,7 @@ public class AccountDbTest {
         Account account = Account.create(client);
         accountGateway.save(account);
 
-        Optional<Account> accountOptional = accountGateway.find(account.getId().toString());
+        Optional<Account> accountOptional = accountGateway.findById(account.getId().toString());
         assertThat(accountOptional).isPresent();
 
         Account accountFound = accountOptional.get();
@@ -57,7 +57,7 @@ public class AccountDbTest {
 
     @Test
     public void shouldNotFindAccount() {
-        Optional<Account> account = accountGateway.find(UUID.randomUUID().toString());
+        Optional<Account> account = accountGateway.findById(UUID.randomUUID().toString());
         assertThat(account).isEqualTo(Optional.empty());
     }
 
@@ -69,11 +69,11 @@ public class AccountDbTest {
 
         Account account = Account.create(client);
         accountGateway.save(account);
-        assertThat(accountGateway.find(account.getId().toString())).isPresent();
+        assertThat(accountGateway.findById(account.getId().toString())).isPresent();
 
         account.credit(new BigDecimal(1000.00));
         accountGateway.updateBalance(account);
-        Account accountUpdated = accountGateway.find(account.getId().toString()).get();
+        Account accountUpdated = accountGateway.findById(account.getId().toString()).get();
         assertThat(accountUpdated.getBalance().compareTo(new BigDecimal(1000.00))).isEqualTo(0);
     }
 }

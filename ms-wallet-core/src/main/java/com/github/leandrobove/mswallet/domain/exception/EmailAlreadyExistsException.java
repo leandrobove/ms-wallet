@@ -1,6 +1,6 @@
 package com.github.leandrobove.mswallet.domain.exception;
 
-public class EmailAlreadyExistsException extends BusinessException {
+public class EmailAlreadyExistsException extends DomainException {
 
     public EmailAlreadyExistsException() {
         super();

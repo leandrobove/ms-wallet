@@ -3,21 +3,18 @@ package com.github.leandrobove.msbalance.event.listener;
 import com.github.leandrobove.msbalance.event.BalanceUpdatedEvent;
 import com.github.leandrobove.msbalance.model.Account;
 import com.github.leandrobove.msbalance.repository.AccountRepository;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 
+@Slf4j
 @Component
 public class BalanceUpdatedEventListener implements Consumer<BalanceUpdatedEvent> {
-
-    private static final Logger log = LoggerFactory.getLogger(BalanceUpdatedEventListener.class);
-
     private final AccountRepository accountRepository;
 
-    public BalanceUpdatedEventListener(AccountRepository accountRepository) {
+    public BalanceUpdatedEventListener(final AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

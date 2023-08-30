@@ -1,6 +1,6 @@
 package com.github.leandrobove.mswallet.domain.exception;
 
-public class EntityNotFoundException extends BusinessException {
+public class EntityNotFoundException extends DomainException {
 
     public EntityNotFoundException() {
         super();

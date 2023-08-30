@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AccountController {
     private final AccountRepository accountRepository;
 
-    public AccountController(AccountRepository accountRepository) {
+    public AccountController(final AccountRepository accountRepository) {
         this.accountRepository = accountRepository;
     }
 

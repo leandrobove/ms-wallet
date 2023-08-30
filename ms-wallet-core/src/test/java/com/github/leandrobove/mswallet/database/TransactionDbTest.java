@@ -48,8 +48,8 @@ public class TransactionDbTest {
         accountFrom.credit(new BigDecimal(1000.00));
         accountGateway.save(accountFrom);
         accountGateway.save(accountTo);
-        assertThat(accountGateway.find(accountFrom.getId().toString())).isPresent();
-        assertThat(accountGateway.find(accountTo.getId().toString())).isPresent();
+        assertThat(accountGateway.findById(accountFrom.getId().toString())).isPresent();
+        assertThat(accountGateway.findById(accountTo.getId().toString())).isPresent();
 
         Transaction transaction = new Transaction(accountFrom, accountTo, new BigDecimal(50.00));
         transactionGateway.create(transaction);

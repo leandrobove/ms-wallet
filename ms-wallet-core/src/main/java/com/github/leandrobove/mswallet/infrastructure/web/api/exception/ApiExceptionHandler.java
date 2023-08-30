@@ -2,27 +2,20 @@ package com.github.leandrobove.mswallet.infrastructure.web.api.exception;
 
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.MessageSource;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
 import java.time.OffsetDateTime;
-import java.util.List;
-import java.util.Locale;
 
-@ControllerAdvice
+@RestControllerAdvice
+@Slf4j
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
-    @Autowired
-    private MessageSource messageSource;
 
     @ExceptionHandler(IllegalArgumentException.class)
     public ResponseEntity<?> handleIllegalArgumentException(IllegalArgumentException ex, WebRequest req) {
@@ -48,20 +41,16 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
         return new ResponseEntity<>(new ApiError(status.value(), message, OffsetDateTime.now()), status);
     }
 
-    @Override
-    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-                                                                  HttpHeaders headers, HttpStatusCode status,
-                                                                  WebRequest request) {
-        List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleUncaught(Exception ex, WebRequest req) {
 
-        StringBuilder messageBuilder = new StringBuilder();
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        String detail = "Oops! we're facing an internal error, please contact an administrator.";
 
-        fieldErrors.stream().forEach((fieldError) -> {
-            String message = messageSource.getMessage(fieldError, Locale.ENGLISH);
-            messageBuilder.append(message + ", ");
-        });
+        log.error(ex.getMessage(), ex);
 
-        return new ResponseEntity<>(new ApiError(status.value(), messageBuilder.toString()
-                .substring(0, messageBuilder.toString().length() - 2), OffsetDateTime.now()), status);
+        ApiError error = new ApiError(status.value(), detail, OffsetDateTime.now());
+
+        return super.handleExceptionInternal(ex, error, new HttpHeaders(), status, req);
     }
 }
