@@ -2,6 +2,7 @@ package com.github.leandrobove.mswallet.database;
 
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.ClientId;
 import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,7 +30,7 @@ public class ClientDbTest {
         Client client = Client.create("John", "j@j.com");
         clientGateway.save(client);
 
-        Client clientFound = clientGateway.findById(client.getId().toString()).get();
+        Client clientFound = clientGateway.findById(client.getId()).get();
 
         assertThat(client.getId()).isEqualTo(clientFound.getId());
         assertThat(client.getName()).isEqualTo(clientFound.getName());
@@ -40,7 +41,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldNotFindClient() {
-        Optional<Client> client = clientGateway.findById(UUID.randomUUID().toString());
+        Optional<Client> client = clientGateway.findById(ClientId.unique());
 
         assertThat(client).isEqualTo(Optional.empty());
     }

@@ -20,11 +20,11 @@ public class TransactionDb implements TransactionGateway {
                 INSERT INTO transaction(id, amount, created_at, account_from_id, account_to_id) VALUES(?,?,?,?,?);
                 """;
         jdbcTemplate.update(sql,
-                transaction.getId().toString(),
+                transaction.getId().value(),
                 transaction.getAmount(),
                 transaction.getCreatedAt(),
-                transaction.getAccountFrom().getId().toString(),
-                transaction.getAccountTo().getId().toString()
+                transaction.getAccountFrom().getId().value(),
+                transaction.getAccountTo().getId().value()
         );
     }
 }

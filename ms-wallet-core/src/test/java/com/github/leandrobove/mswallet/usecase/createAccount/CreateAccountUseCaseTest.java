@@ -7,6 +7,7 @@ import com.github.leandrobove.mswallet.application.usecase.createAccount.CreateA
 import com.github.leandrobove.mswallet.application.usecase.createAccount.CreateAccountUseCaseOutput;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.ClientId;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -16,10 +17,8 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -38,30 +37,31 @@ public class CreateAccountUseCaseTest {
     @Test
     public void shouldCreateAccountUseCase() {
         Client expectedClient = Client.create("John", "j@j.com");
-        String clientId = expectedClient.getId().toString();
+        ClientId clientId = expectedClient.getId();
 
         when(clientGateway.findById(clientId)).thenReturn(Optional.of(expectedClient));
 
-        CreateAccountUseCaseOutput output = useCase.execute(CreateAccountUseCaseInput.builder()
-                .clientId(clientId)
-                .build());
+        var input = CreateAccountUseCaseInput.builder()
+                .clientId(clientId.value())
+                .build();
+
+        CreateAccountUseCaseOutput output = useCase.execute(input);
 
         verify(clientGateway, times(1)).findById(clientId);
         verify(accountGateway, times(1)).save(any(Account.class));
 
         assertThat(output.getId()).isNotNull();
-        assertDoesNotThrow(() -> UUID.fromString(output.getId()));
     }
 
     @Test
     public void shouldNotCreateAccountWhenClientNotFound() {
-        String clientId = "123";
+        var clientId = ClientId.unique();
 
         when(clientGateway.findById(clientId)).thenThrow(new EntityNotFoundException(String.format("client id %s not found", clientId)));
 
         EntityNotFoundException ex = Assertions.assertThrows(EntityNotFoundException.class, () -> {
             CreateAccountUseCaseOutput output = useCase.execute(CreateAccountUseCaseInput.builder()
-                    .clientId(clientId)
+                    .clientId(clientId.value())
                     .build());
         });
         assertThat(ex.getMessage()).isEqualTo("client id " + clientId + " not found");

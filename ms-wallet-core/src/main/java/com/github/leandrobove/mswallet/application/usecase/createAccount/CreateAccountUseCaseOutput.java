@@ -11,7 +11,7 @@ public class CreateAccountUseCaseOutput {
 
     public static CreateAccountUseCaseOutput from(final Account account) {
         return CreateAccountUseCaseOutput.builder()
-                .id(account.getId().toString())
+                .id(account.getId().value())
                 .build();
     }
 }

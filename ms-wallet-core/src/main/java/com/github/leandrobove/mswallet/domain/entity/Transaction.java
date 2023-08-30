@@ -1,19 +1,17 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
+import com.github.leandrobove.mswallet.domain.AggregateRoot;
+import com.github.leandrobove.mswallet.domain.event.BalanceUpdatedEvent;
+import com.github.leandrobove.mswallet.domain.event.TransactionCreatedEvent;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.UUID;
 
-public class Transaction {
-    private UUID id;
+public class Transaction extends AggregateRoot<TransactionId> {
 
     private Account accountFrom;
-
     private Account accountTo;
-
     private BigDecimal amount;
-
     private OffsetDateTime createdAt;
 
     private Transaction(
@@ -21,10 +19,10 @@ public class Transaction {
             final Account accountTo,
             final BigDecimal amount
     ) {
-        var transactionId = UUID.randomUUID();
+        super(TransactionId.unique());
+
         var now = OffsetDateTime.now();
 
-        this.id = transactionId;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
@@ -41,6 +39,9 @@ public class Transaction {
         var transaction = new Transaction(accountFrom, accountTo, amount);
         transaction.getAccountFrom().debit(amount);
         transaction.getAccountTo().credit(amount);
+
+        transaction.registerEvent(new BalanceUpdatedEvent(transaction));
+        transaction.registerEvent(new TransactionCreatedEvent(transaction));
 
         return transaction;
     }
@@ -63,10 +64,6 @@ public class Transaction {
         }
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public Account getAccountFrom() {
         return accountFrom;
     }
@@ -81,29 +78,5 @@ public class Transaction {
 
     public OffsetDateTime getCreatedAt() {
         return createdAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Transaction that = (Transaction) o;
-        return id.equals(that.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Transaction{" +
-                "id=" + id +
-                ", accountFrom=" + accountFrom +
-                ", accountTo=" + accountTo +
-                ", amount=" + amount +
-                ", createdAt=" + createdAt +
-                '}';
     }
 }

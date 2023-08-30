@@ -18,9 +18,9 @@ public class CreateTransactionUseCaseOutput {
 
     public static CreateTransactionUseCaseOutput from(final Transaction transaction) {
         return CreateTransactionUseCaseOutput.builder()
-                .transactionId(transaction.getId().toString())
-                .accountIdFrom(transaction.getAccountFrom().getId().toString())
-                .accountIdTo(transaction.getAccountTo().getId().toString())
+                .transactionId(transaction.getId().value())
+                .accountIdFrom(transaction.getAccountFrom().getId().value())
+                .accountIdTo(transaction.getAccountTo().getId().value())
                 .amount(transaction.getAmount())
                 .build();
     }

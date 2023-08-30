@@ -1,17 +1,47 @@
 package com.github.leandrobove.mswallet.domain.event;
 
-import com.github.leandrobove.mswallet.domain.BaseEvent;
-import com.github.leandrobove.mswallet.infrastructure.event.dto.TransactionCreatedEventPayload;
-import lombok.Getter;
-import lombok.ToString;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.github.leandrobove.mswallet.domain.DomainEvent;
+import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.Transaction;
 
-@Getter
-@ToString
-public class TransactionCreatedEvent extends BaseEvent {
-    private TransactionCreatedEventPayload payload;
+import java.math.BigDecimal;
 
-    public TransactionCreatedEvent(TransactionCreatedEventPayload payload) {
-        super("TransactionCreated");
-        this.payload = payload;
+public class TransactionCreatedEvent extends DomainEvent {
+
+    @JsonProperty("id")
+    private String transactionId;
+
+    @JsonProperty("account_id_from")
+    private String accountIdFrom;
+
+    @JsonProperty("account_id_to")
+    private String accountIdTo;
+
+    @JsonProperty("amount")
+    private BigDecimal amount;
+
+    public TransactionCreatedEvent(Transaction transaction) {
+        super();
+
+        Account accountFrom = transaction.getAccountFrom();
+        Account accountTo = transaction.getAccountTo();
+
+        this.transactionId = transaction.getId().value();
+        this.accountIdFrom = accountFrom.getId().value();
+        this.accountIdTo = accountTo.getId().value();
+        this.amount = transaction.getAmount();
+    }
+
+    @Override
+    public String toString() {
+        return "TransactionCreatedEvent{" +
+                "transactionId='" + transactionId + '\'' +
+                ", accountIdFrom='" + accountIdFrom + '\'' +
+                ", accountIdTo='" + accountIdTo + '\'' +
+                ", amount=" + amount +
+                ", eventId='" + eventId + '\'' +
+                ", dateTimeOccurred=" + dateTimeOccurred +
+                '}';
     }
 }

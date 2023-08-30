@@ -3,6 +3,7 @@ package com.github.leandrobove.mswallet.database;
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.AccountId;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.infrastructure.database.AccountDb;
 import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
@@ -34,12 +35,12 @@ public class AccountDbTest {
     public void shouldSaveAccount() {
         Client client = Client.create("John", "j@j.com");
         clientGateway.save(client);
-        assertThat(clientGateway.findById(client.getId().toString())).isPresent();
+        assertThat(clientGateway.findById(client.getId())).isPresent();
 
         Account account = Account.create(client);
         accountGateway.save(account);
 
-        Optional<Account> accountOptional = accountGateway.findById(account.getId().toString());
+        Optional<Account> accountOptional = accountGateway.findById(account.getId());
         assertThat(accountOptional).isPresent();
 
         Account accountFound = accountOptional.get();
@@ -57,7 +58,7 @@ public class AccountDbTest {
 
     @Test
     public void shouldNotFindAccount() {
-        Optional<Account> account = accountGateway.findById(UUID.randomUUID().toString());
+        Optional<Account> account = accountGateway.findById(AccountId.unique());
         assertThat(account).isEqualTo(Optional.empty());
     }
 
@@ -65,15 +66,15 @@ public class AccountDbTest {
     public void shouldUpdateAccountBalance() {
         Client client = Client.create("John", "j@j.com");
         clientGateway.save(client);
-        assertThat(clientGateway.findById(client.getId().toString())).isPresent();
+        assertThat(clientGateway.findById(client.getId())).isPresent();
 
         Account account = Account.create(client);
         accountGateway.save(account);
-        assertThat(accountGateway.findById(account.getId().toString())).isPresent();
+        assertThat(accountGateway.findById(account.getId())).isPresent();
 
         account.credit(new BigDecimal(1000.00));
         accountGateway.updateBalance(account);
-        Account accountUpdated = accountGateway.findById(account.getId().toString()).get();
+        Account accountUpdated = accountGateway.findById(account.getId()).get();
         assertThat(accountUpdated.getBalance().compareTo(new BigDecimal(1000.00))).isEqualTo(0);
     }
 }

@@ -1,27 +1,27 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
+import com.github.leandrobove.mswallet.domain.AggregateRoot;
+
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.UUID;
 
-public class Client {
-
-    private UUID id;
+public class Client extends AggregateRoot<ClientId> {
 
     private String name;
-
     private String email;
-
     private List<Account> accounts;
-
     private OffsetDateTime createdAt;
-
     private OffsetDateTime updatedAt;
 
-    private Client(UUID id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        this.id = id;
+    private Client(
+            final ClientId id,
+            final String name,
+            final String email,
+            final OffsetDateTime createdAt,
+            final OffsetDateTime updatedAt
+    ) {
+        super(id);
         this.name = name;
         this.email = email;
         this.accounts = new ArrayList<>();
@@ -35,14 +35,20 @@ public class Client {
             final String name,
             final String email
     ) {
-        var clientId = UUID.randomUUID();
+        var clientId = ClientId.unique();
         var now = OffsetDateTime.now();
 
         return new Client(clientId, name, email, now, now);
     }
 
-    public static Client rebuildClient(String id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        return new Client(UUID.fromString(id), name, email, createdAt, updatedAt);
+    public static Client rebuildClient(
+            final String id,
+            final String name,
+            final String email,
+            final OffsetDateTime createdAt,
+            final OffsetDateTime updatedAt
+    ) {
+        return new Client(ClientId.from(id), name, email, createdAt, updatedAt);
     }
 
     public void changeName(final String name) {
@@ -59,7 +65,7 @@ public class Client {
         this.validate();
     }
 
-    public void addAccount(Account account) {
+    public void addAccount(final Account account) {
         if (account == null) {
             throw new IllegalArgumentException("account is required");
         }
@@ -76,10 +82,6 @@ public class Client {
         if (this.email == "") {
             throw new IllegalArgumentException("email is required");
         }
-    }
-
-    public UUID getId() {
-        return id;
     }
 
     public String getName() {
@@ -102,28 +104,4 @@ public class Client {
         return updatedAt;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Client client = (Client) o;
-        return id.equals(client.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Client{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", accounts=" + accounts +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
-    }
 }

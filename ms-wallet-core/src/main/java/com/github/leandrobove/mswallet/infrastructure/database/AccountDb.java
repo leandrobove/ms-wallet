@@ -2,6 +2,7 @@ package com.github.leandrobove.mswallet.infrastructure.database;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.AccountId;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -16,7 +17,7 @@ public class AccountDb implements AccountGateway {
     }
 
     @Override
-    public Optional<Account> findById(String accountId) {
+    public Optional<Account> findById(AccountId accountId) {
         var sql = "SELECT a.id, " +
                 "a.balance, " +
                 "a.created_at, " +
@@ -30,7 +31,7 @@ public class AccountDb implements AccountGateway {
                 "ON c.id = a.client_id " +
                 "WHERE a.id = ? " +
                 "FOR UPDATE;";
-        return jdbcTemplate.query(sql, new AccountRowMapper(), accountId)
+        return jdbcTemplate.query(sql, new AccountRowMapper(), accountId.value())
                 .stream()
                 .findFirst();
     }
@@ -40,7 +41,7 @@ public class AccountDb implements AccountGateway {
         var sql = """
                 INSERT INTO account(id, client_id, balance, created_at, updated_at) VALUES(?,?,?,?,?);
                 """;
-        jdbcTemplate.update(sql, account.getId().toString(), account.getClient().getId().toString(), account.getBalance(),
+        jdbcTemplate.update(sql, account.getId().value(), account.getClient().getId().value(), account.getBalance(),
                 account.getCreatedAt(), account.getUpdatedAt());
     }
 
@@ -50,6 +51,6 @@ public class AccountDb implements AccountGateway {
                 UPDATE account SET balance = ? WHERE id = ?;
                 """;
 
-        jdbcTemplate.update(sql, account.getBalance(), account.getId().toString());
+        jdbcTemplate.update(sql, account.getBalance(), account.getId().value());
     }
 }

@@ -4,6 +4,7 @@ import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.ClientId;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -37,7 +38,7 @@ public class CreateAccountUseCase {
     }
 
     private Client findOrFail(final String clientId) {
-        return clientGateway.findById(clientId)
+        return clientGateway.findById(ClientId.from(clientId))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("client id %s not found", clientId)));
     }
 

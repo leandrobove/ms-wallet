@@ -22,10 +22,10 @@ public class BalanceUpdatedEventListener implements Consumer<BalanceUpdatedEvent
     public void accept(BalanceUpdatedEvent balanceUpdatedEvent) {
         log.info("Consuming BalanceUpdatedEvent: {}", balanceUpdatedEvent);
 
-        Account accountFrom = new Account(balanceUpdatedEvent.getPayload().getAccountIdFrom(),
-                balanceUpdatedEvent.getPayload().getBalanceAccountFrom());
-        Account accountTo = new Account(balanceUpdatedEvent.getPayload().getAccountIdTo(),
-                balanceUpdatedEvent.getPayload().getBalanceAccountTo());
+        Account accountFrom = new Account(balanceUpdatedEvent.getAccountIdFrom(),
+                balanceUpdatedEvent.getBalanceAccountFrom());
+        Account accountTo = new Account(balanceUpdatedEvent.getAccountIdTo(),
+                balanceUpdatedEvent.getBalanceAccountTo());
 
         //persist account into database
         accountRepository.saveAll(Arrays.asList(accountFrom, accountTo));

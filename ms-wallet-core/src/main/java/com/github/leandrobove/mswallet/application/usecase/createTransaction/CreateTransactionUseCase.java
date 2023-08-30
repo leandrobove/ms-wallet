@@ -2,14 +2,11 @@ package com.github.leandrobove.mswallet.application.usecase.createTransaction;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.domain.EventPublisher;
 import com.github.leandrobove.mswallet.domain.entity.Account;
+import com.github.leandrobove.mswallet.domain.entity.AccountId;
 import com.github.leandrobove.mswallet.domain.entity.Transaction;
-import com.github.leandrobove.mswallet.domain.event.BalanceUpdatedEvent;
-import com.github.leandrobove.mswallet.domain.event.TransactionCreatedEvent;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
-import com.github.leandrobove.mswallet.infrastructure.event.dto.BalanceUpdatedEventPayload;
-import com.github.leandrobove.mswallet.infrastructure.event.dto.TransactionCreatedEventPayload;
-import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,12 +16,12 @@ import static java.util.Objects.isNull;
 public class CreateTransactionUseCase {
     private final TransactionGateway transactionGateway;
     private final AccountGateway accountGateway;
-    private final ApplicationEventPublisher eventPublisher;
+    private final EventPublisher eventPublisher;
 
     public CreateTransactionUseCase(
             final TransactionGateway transactionGateway,
             final AccountGateway accountGateway,
-            final ApplicationEventPublisher eventPublisher
+            final EventPublisher eventPublisher
     ) {
         this.transactionGateway = transactionGateway;
         this.accountGateway = accountGateway;
@@ -51,29 +48,14 @@ public class CreateTransactionUseCase {
         //persist object into the database
         transactionGateway.create(transaction);
 
-        var balanceUpdatedEventPayload = new BalanceUpdatedEventPayload(
-                accountFrom.getId().toString(),
-                accountTo.getId().toString(),
-                accountFrom.getBalance(),
-                accountTo.getBalance()
-        );
-
-        var transactionCreatedEventPayload = new TransactionCreatedEventPayload(
-                transaction.getId().toString(),
-                accountFrom.getId().toString(),
-                accountTo.getId().toString(),
-                transaction.getAmount()
-        );
-
         //publish events
-        eventPublisher.publishEvent(new TransactionCreatedEvent(transactionCreatedEventPayload));
-        eventPublisher.publishEvent(new BalanceUpdatedEvent(balanceUpdatedEventPayload));
+        transaction.publishDomainEvents(eventPublisher);
 
         return CreateTransactionUseCaseOutput.from(transaction);
     }
 
     private Account findAccountOrFail(final String accountId) {
-        return accountGateway.findById(accountId).orElseThrow(
+        return accountGateway.findById(AccountId.from(accountId)).orElseThrow(
                 () -> new EntityNotFoundException(String.format("account id %s not found", accountId)));
     }
 

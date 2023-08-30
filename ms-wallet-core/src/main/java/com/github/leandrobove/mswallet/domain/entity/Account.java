@@ -1,23 +1,25 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
+import com.github.leandrobove.mswallet.domain.AggregateRoot;
+
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-import java.util.Objects;
-import java.util.UUID;
 
-public class Account {
-    private UUID id;
+public class Account extends AggregateRoot<AccountId> {
 
     private Client client;
-
     private BigDecimal balance;
-
     private OffsetDateTime createdAt;
-
     private OffsetDateTime updatedAt;
 
-    private Account(UUID id, Client client, BigDecimal balance, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        this.id = id;
+    private Account(
+            final AccountId id,
+            final Client client,
+            final BigDecimal balance,
+            final OffsetDateTime createdAt,
+            final OffsetDateTime updatedAt
+    ) {
+        super(id);
         this.client = client;
         this.balance = balance;
         this.createdAt = createdAt;
@@ -27,15 +29,21 @@ public class Account {
     }
 
     public static Account create(final Client client) {
-        var accountId = UUID.randomUUID();
+        var accountId = AccountId.unique();
         var initialAccountBalance = BigDecimal.ZERO;
         var now = OffsetDateTime.now();
 
         return new Account(accountId, client, initialAccountBalance, now, now);
     }
 
-    public static Account rebuildAccount(String id, Client client, BigDecimal balance, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
-        return new Account(UUID.fromString(id), client, balance, createdAt, updatedAt);
+    public static Account rebuildAccount(
+            final String id,
+            final Client client,
+            final BigDecimal balance,
+            final OffsetDateTime createdAt,
+            final OffsetDateTime updatedAt
+    ) {
+        return new Account(AccountId.from(id), client, balance, createdAt, updatedAt);
     }
 
     private void validate() {
@@ -71,10 +79,6 @@ public class Account {
         }
     }
 
-    public UUID getId() {
-        return id;
-    }
-
     public Client getClient() {
         return client;
     }
@@ -89,29 +93,5 @@ public class Account {
 
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Account account = (Account) o;
-        return id.equals(account.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
-
-    @Override
-    public String toString() {
-        return "Account{" +
-                "id=" + id +
-                ", client=" + client +
-                ", balance=" + balance +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                '}';
     }
 }
