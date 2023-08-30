@@ -1,20 +1,13 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter
-@ToString
 public class Client {
 
-    @EqualsAndHashCode.Include
     private UUID id;
 
     private String name;
@@ -38,26 +31,28 @@ public class Client {
         this.validate();
     }
 
-    public static Client create(String name, String email) {
-        return new Client(UUID.randomUUID(), name, email, OffsetDateTime.now(), OffsetDateTime.now());
-    }
+    public static Client create(
+            final String name,
+            final String email
+    ) {
+        var clientId = UUID.randomUUID();
+        var now = OffsetDateTime.now();
 
-    public static Client createWithId(String id, String name, String email) {
-        return new Client(UUID.fromString(id), name, email, OffsetDateTime.now(), OffsetDateTime.now());
+        return new Client(clientId, name, email, now, now);
     }
 
     public static Client rebuildClient(String id, String name, String email, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
         return new Client(UUID.fromString(id), name, email, createdAt, updatedAt);
     }
 
-    public void changeName(String name) {
+    public void changeName(final String name) {
         this.name = name;
         this.updatedAt = OffsetDateTime.now();
 
         this.validate();
     }
 
-    public void changeEmail(String email) {
+    public void changeEmail(final String email) {
         this.email = email;
         this.updatedAt = OffsetDateTime.now();
 
@@ -81,5 +76,54 @@ public class Client {
         if (this.email == "") {
             throw new IllegalArgumentException("email is required");
         }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public List<Account> getAccounts() {
+        return accounts;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Client client = (Client) o;
+        return id.equals(client.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Client{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", accounts=" + accounts +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }

@@ -37,8 +37,8 @@ public class CreateAccountUseCaseTest {
 
     @Test
     public void shouldCreateAccountUseCase() {
-        String clientId = UUID.randomUUID().toString();
-        Client expectedClient = Client.createWithId(clientId, "John", "j@j.com");
+        Client expectedClient = Client.create("John", "j@j.com");
+        String clientId = expectedClient.getId().toString();
 
         when(clientGateway.findById(clientId)).thenReturn(Optional.of(expectedClient));
 

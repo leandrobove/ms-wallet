@@ -24,7 +24,7 @@ public class CreateAccountUseCase {
     }
 
     @Transactional
-    public CreateAccountUseCaseOutput execute(CreateAccountUseCaseInput input) {
+    public CreateAccountUseCaseOutput execute(final CreateAccountUseCaseInput input) {
         this.validateInput(input);
 
         Client client = this.findOrFail(input.getClientId());
@@ -33,17 +33,15 @@ public class CreateAccountUseCase {
 
         accountGateway.save(account);
 
-        return CreateAccountUseCaseOutput.builder()
-                .id(account.getId().toString())
-                .build();
+        return CreateAccountUseCaseOutput.from(account);
     }
 
-    private Client findOrFail(String clientId) {
+    private Client findOrFail(final String clientId) {
         return clientGateway.findById(clientId)
                 .orElseThrow(() -> new EntityNotFoundException(String.format("client id %s not found", clientId)));
     }
 
-    private void validateInput(CreateAccountUseCaseInput input) {
+    private void validateInput(final CreateAccountUseCaseInput input) {
         if (isNull(input.getClientId()) || input.getClientId() == "") {
             throw new IllegalArgumentException("client id is required");
         }

@@ -17,7 +17,7 @@ public class CreateClientUseCase {
     }
 
     @Transactional
-    public CreateClientUseCaseOutput execute(CreateClientUseCaseInput input) {
+    public CreateClientUseCaseOutput execute(final CreateClientUseCaseInput input) {
         this.validateInput(input);
 
         var name = input.getName();
@@ -29,23 +29,17 @@ public class CreateClientUseCase {
 
         clientGateway.save(client);
 
-        return CreateClientUseCaseOutput.builder()
-                .id(client.getId().toString())
-                .name(client.getName())
-                .email(client.getEmail())
-                .createdAt(client.getCreatedAt())
-                .updatedAt(client.getUpdatedAt())
-                .build();
+        return CreateClientUseCaseOutput.from(client);
     }
 
-    private void verifyEmailAlreadyExists(String email) {
+    private void verifyEmailAlreadyExists(final String email) {
         //verify whether email already exists
         if (clientGateway.findByEmail(email).isPresent()) {
             throw new EmailAlreadyExistsException(String.format("email %s already exists", email));
         }
     }
 
-    private void validateInput(CreateClientUseCaseInput input) {
+    private void validateInput(final CreateClientUseCaseInput input) {
         if (isNull(input.getEmail()) || input.getEmail() == "") {
             throw new IllegalArgumentException("email is required");
         }

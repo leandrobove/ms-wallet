@@ -26,7 +26,7 @@ public class TransactionTest {
         account1.credit(new BigDecimal(1000.00));
         account2.credit(new BigDecimal(1000.00));
 
-        Transaction transaction = new Transaction(account1, account2, new BigDecimal(500.00));
+        Transaction transaction = Transaction.transfer(account1, account2, new BigDecimal(500.00));
 
         assertThat(transaction.getId()).isNotNull();
         assertThat(transaction.getAccountFrom()).isEqualTo(account1);
@@ -45,7 +45,7 @@ public class TransactionTest {
         account2.credit(new BigDecimal(1000.00));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(null, account2, new BigDecimal(500.00));
+            Transaction.transfer(null, account2, new BigDecimal(500.00));
         });
         assertThat(ex.getMessage()).isEqualTo("accountFrom is required");
     }
@@ -58,7 +58,7 @@ public class TransactionTest {
         account1.credit(new BigDecimal(1000.00));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(account1, null, new BigDecimal(500.00));
+            Transaction.transfer(account1, null, new BigDecimal(500.00));
         });
         assertThat(ex.getMessage()).isEqualTo("accountTo is required");
     }
@@ -78,7 +78,7 @@ public class TransactionTest {
         account2.credit(new BigDecimal(1000.00));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(account1, account2, BigDecimal.ZERO);
+            Transaction.transfer(account1, account2, BigDecimal.ZERO);
         });
         assertThat(ex.getMessage()).isEqualTo("amount must be greater than zero");
     }
@@ -98,7 +98,7 @@ public class TransactionTest {
         account2.credit(new BigDecimal(1000.00));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(account1, account2, new BigDecimal(-20.00));
+            Transaction.transfer(account1, account2, new BigDecimal(-20.00));
         });
         assertThat(ex.getMessage()).isEqualTo("amount must be greater than zero");
     }
@@ -115,7 +115,7 @@ public class TransactionTest {
         client2.addAccount(account2);
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
-            new Transaction(account1, account2, new BigDecimal(20.00));
+            Transaction.transfer(account1, account2, new BigDecimal(20.00));
         });
         assertThat(ex.getMessage()).isEqualTo("insufficient funds");
     }

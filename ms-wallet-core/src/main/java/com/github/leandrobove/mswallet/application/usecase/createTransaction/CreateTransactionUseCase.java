@@ -32,7 +32,7 @@ public class CreateTransactionUseCase {
     }
 
     @Transactional
-    public CreateTransactionUseCaseOutput execute(CreateTransactionUseCaseInput input) {
+    public CreateTransactionUseCaseOutput execute(final CreateTransactionUseCaseInput input) {
         this.validateInput(input);
 
         //find accountFrom
@@ -42,7 +42,7 @@ public class CreateTransactionUseCase {
         Account accountTo = this.findAccountOrFail(input.getAccountToId());
 
         //create transaction object
-        Transaction transaction = new Transaction(accountFrom, accountTo, input.getAmount());
+        Transaction transaction = Transaction.transfer(accountFrom, accountTo, input.getAmount());
 
         //update account balance
         accountGateway.updateBalance(accountFrom);
@@ -50,13 +50,6 @@ public class CreateTransactionUseCase {
 
         //persist object into the database
         transactionGateway.create(transaction);
-
-        CreateTransactionUseCaseOutput output = CreateTransactionUseCaseOutput.builder()
-                .transactionId(transaction.getId().toString())
-                .accountIdFrom(accountFrom.getId().toString())
-                .accountIdTo(accountTo.getId().toString())
-                .amount(transaction.getAmount())
-                .build();
 
         var balanceUpdatedEventPayload = new BalanceUpdatedEventPayload(
                 accountFrom.getId().toString(),
@@ -76,15 +69,15 @@ public class CreateTransactionUseCase {
         eventPublisher.publishEvent(new TransactionCreatedEvent(transactionCreatedEventPayload));
         eventPublisher.publishEvent(new BalanceUpdatedEvent(balanceUpdatedEventPayload));
 
-        return output;
+        return CreateTransactionUseCaseOutput.from(transaction);
     }
 
-    private Account findAccountOrFail(String accountId) {
+    private Account findAccountOrFail(final String accountId) {
         return accountGateway.findById(accountId).orElseThrow(
                 () -> new EntityNotFoundException(String.format("account id %s not found", accountId)));
     }
 
-    private void validateInput(CreateTransactionUseCaseInput input) {
+    private void validateInput(final CreateTransactionUseCaseInput input) {
         if (isNull(input.getAccountFromId()) || input.getAccountFromId() == "") {
             throw new IllegalArgumentException("account id from is required");
         }

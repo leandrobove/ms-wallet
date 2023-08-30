@@ -1,18 +1,11 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter
-@ToString
 public class Transaction {
-    @EqualsAndHashCode.Include
     private UUID id;
 
     private Account accountFrom;
@@ -23,20 +16,33 @@ public class Transaction {
 
     private OffsetDateTime createdAt;
 
-    public Transaction(Account accountFrom, Account accountTo, BigDecimal amount) {
-        this.id = UUID.randomUUID();
+    private Transaction(
+            final Account accountFrom,
+            final Account accountTo,
+            final BigDecimal amount
+    ) {
+        var transactionId = UUID.randomUUID();
+        var now = OffsetDateTime.now();
+
+        this.id = transactionId;
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
-        this.createdAt = OffsetDateTime.now();
+        this.createdAt = now;
 
         this.validate();
-        this.transfer();
     }
 
-    private void transfer() {
-        this.accountFrom.debit(this.amount);
-        this.accountTo.credit(this.amount);
+    public static Transaction transfer(
+            final Account accountFrom,
+            final Account accountTo,
+            final BigDecimal amount
+    ) {
+        var transaction = new Transaction(accountFrom, accountTo, amount);
+        transaction.getAccountFrom().debit(amount);
+        transaction.getAccountTo().credit(amount);
+
+        return transaction;
     }
 
     private void validate() {
@@ -55,5 +61,49 @@ public class Transaction {
         if (this.accountFrom.getBalance().compareTo(this.amount) < 0) {
             throw new IllegalArgumentException("insufficient funds");
         }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Account getAccountFrom() {
+        return accountFrom;
+    }
+
+    public Account getAccountTo() {
+        return accountTo;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Transaction that = (Transaction) o;
+        return id.equals(that.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Transaction{" +
+                "id=" + id +
+                ", accountFrom=" + accountFrom +
+                ", accountTo=" + accountTo +
+                ", amount=" + amount +
+                ", createdAt=" + createdAt +
+                '}';
     }
 }

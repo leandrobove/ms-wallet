@@ -51,7 +51,7 @@ public class TransactionDbTest {
         assertThat(accountGateway.findById(accountFrom.getId().toString())).isPresent();
         assertThat(accountGateway.findById(accountTo.getId().toString())).isPresent();
 
-        Transaction transaction = new Transaction(accountFrom, accountTo, new BigDecimal(50.00));
+        Transaction transaction = Transaction.transfer(accountFrom, accountTo, new BigDecimal(50.00));
         transactionGateway.create(transaction);
 
         var sql = """

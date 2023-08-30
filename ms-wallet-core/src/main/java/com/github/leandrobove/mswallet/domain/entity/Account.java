@@ -1,18 +1,11 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
-import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.ToString;
-
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-@Getter
-@ToString(exclude = "client")
 public class Account {
-    @EqualsAndHashCode.Include
     private UUID id;
 
     private Client client;
@@ -33,12 +26,12 @@ public class Account {
         this.validate();
     }
 
-    public static Account create(Client client) {
-        return new Account(UUID.randomUUID(), client, BigDecimal.ZERO, OffsetDateTime.now(), OffsetDateTime.now());
-    }
+    public static Account create(final Client client) {
+        var accountId = UUID.randomUUID();
+        var initialAccountBalance = BigDecimal.ZERO;
+        var now = OffsetDateTime.now();
 
-    public static Account createWithId(String id, Client client) {
-        return new Account(UUID.fromString(id), client, BigDecimal.ZERO, OffsetDateTime.now(), OffsetDateTime.now());
+        return new Account(accountId, client, initialAccountBalance, now, now);
     }
 
     public static Account rebuildAccount(String id, Client client, BigDecimal balance, OffsetDateTime createdAt, OffsetDateTime updatedAt) {
@@ -76,5 +69,49 @@ public class Account {
         if (amount.doubleValue() <= 0) {
             throw new IllegalArgumentException("amount must be a positive number");
         }
+    }
+
+    public UUID getId() {
+        return id;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public BigDecimal getBalance() {
+        return balance;
+    }
+
+    public OffsetDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public OffsetDateTime getUpdatedAt() {
+        return updatedAt;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Account account = (Account) o;
+        return id.equals(account.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
+
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", client=" + client +
+                ", balance=" + balance +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                '}';
     }
 }
