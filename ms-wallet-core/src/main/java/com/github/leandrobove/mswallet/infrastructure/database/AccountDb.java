@@ -28,7 +28,8 @@ public class AccountDb implements AccountGateway {
                 "c.updated_at " +
                 "FROM account a INNER JOIN client c " +
                 "ON c.id = a.client_id " +
-                "WHERE a.id = ?";
+                "WHERE a.id = ? " +
+                "FOR UPDATE;";
         return jdbcTemplate.query(sql, new AccountRowMapper(), accountId)
                 .stream()
                 .findFirst();
