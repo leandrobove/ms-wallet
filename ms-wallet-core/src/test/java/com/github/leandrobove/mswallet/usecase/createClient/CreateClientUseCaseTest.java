@@ -30,53 +30,58 @@ public class CreateClientUseCaseTest {
 
     @Test
     public void shouldCreateClientUseCase() {
-        CreateClientUseCaseOutput output = useCase.execute(CreateClientUseCaseInput.builder()
+        var input = CreateClientUseCaseInput.builder()
                 .name("John")
-                .email("j@j.com")
-                .build());
+                .email("john@gmail.com")
+                .build();
+
+        CreateClientUseCaseOutput output = useCase.execute(input);
 
         verify(clientGateway, times(1)).save(any(Client.class));
 
         assertThat(output.getId()).isNotNull();
         assertThat(output.getName()).isEqualTo("John");
-        assertThat(output.getEmail()).isEqualTo("j@j.com");
+        assertThat(output.getEmail()).isEqualTo("john@gmail.com");
         assertThat(output.getCreatedAt()).isNotNull();
         assertThat(output.getUpdatedAt()).isNotNull();
     }
 
     @Test
     public void shouldNotCreateClientWhenEmailAlreadyExists() {
-        String email = "j@j.com";
-        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "j@j.com")));
+        String email = "john@gmail.com";
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", email)));
+
+        var input = CreateClientUseCaseInput.builder()
+                .name("John")
+                .email(email)
+                .build();
 
         assertThrows(EmailAlreadyExistsException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInput.builder()
-                    .name("John")
-                    .email("j@j.com")
-                    .build());
+            var output = useCase.execute(input);
         });
     }
 
     @Test
     public void shouldNotCreateClientWhenNameIsMissing() {
-        String email = "j@j.com";
-        when(clientGateway.findByEmail(email)).thenReturn(Optional.empty());
+        var input = CreateClientUseCaseInput.builder()
+                .name("")
+                .email("j@j.com")
+                .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInput.builder()
-                    .name("")
-                    .email("j@j.com")
-                    .build());
+            var output = useCase.execute(input);
         });
     }
 
     @Test
     public void shouldNotCreateClientWhenEmailIsMissing() {
+        var input = CreateClientUseCaseInput.builder()
+                .name("John")
+                .email("")
+                .build();
+
         assertThrows(IllegalArgumentException.class, () -> {
-            var output = useCase.execute(CreateClientUseCaseInput.builder()
-                    .name("John")
-                    .email("")
-                    .build());
+            var output = useCase.execute(input);
         });
     }
 

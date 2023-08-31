@@ -36,8 +36,8 @@ public class TransactionDbTest {
 
     @Test
     public void shouldSaveAccount() {
-        Client client1 = Client.create("John", "j@j.com");
-        Client client2 = Client.create("Mariah", "m@j.com");
+        Client client1 = Client.create("John", "john@gmail.com");
+        Client client2 = Client.create("Mariah", "maria@hotmail.com");
         clientGateway.save(client1);
         clientGateway.save(client2);
         assertThat(clientGateway.findById(client1.getId())).isPresent();

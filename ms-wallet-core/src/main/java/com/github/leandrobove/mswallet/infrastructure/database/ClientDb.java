@@ -43,6 +43,6 @@ public class ClientDb implements ClientGateway {
                 INSERT INTO client(id, name, email, created_at, updated_at) VALUES(?,?,?,?,?);
                 """;
         jdbcTemplate.update(sql, client.getId().value(), client.getName(),
-                client.getEmail(), client.getCreatedAt(), client.getUpdatedAt());
+                client.getEmail().value(), client.getCreatedAt(), client.getUpdatedAt());
     }
 }

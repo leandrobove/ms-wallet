@@ -33,7 +33,7 @@ public class AccountDbTest {
 
     @Test
     public void shouldSaveAccount() {
-        Client client = Client.create("John", "j@j.com");
+        Client client = Client.create("John", "john@gmail.com");
         clientGateway.save(client);
         assertThat(clientGateway.findById(client.getId())).isPresent();
 
@@ -64,7 +64,7 @@ public class AccountDbTest {
 
     @Test
     public void shouldUpdateAccountBalance() {
-        Client client = Client.create("John", "j@j.com");
+        Client client = Client.create("John", "john@gmail.com");
         clientGateway.save(client);
         assertThat(clientGateway.findById(client.getId())).isPresent();
 

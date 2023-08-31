@@ -9,7 +9,7 @@ import java.util.List;
 public class Client extends AggregateRoot<ClientId> {
 
     private String name;
-    private String email;
+    private Email email;
     private List<Account> accounts;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
@@ -17,7 +17,7 @@ public class Client extends AggregateRoot<ClientId> {
     private Client(
             final ClientId id,
             final String name,
-            final String email,
+            final Email email,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
@@ -38,7 +38,7 @@ public class Client extends AggregateRoot<ClientId> {
         var clientId = ClientId.unique();
         var now = OffsetDateTime.now();
 
-        return new Client(clientId, name, email, now, now);
+        return new Client(clientId, name, Email.from(email), now, now);
     }
 
     public static Client rebuildClient(
@@ -48,7 +48,7 @@ public class Client extends AggregateRoot<ClientId> {
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
-        return new Client(ClientId.from(id), name, email, createdAt, updatedAt);
+        return new Client(ClientId.from(id), name, Email.from(email), createdAt, updatedAt);
     }
 
     public void changeName(final String name) {
@@ -59,7 +59,7 @@ public class Client extends AggregateRoot<ClientId> {
     }
 
     public void changeEmail(final String email) {
-        this.email = email;
+        this.email = Email.from(email);
         this.updatedAt = OffsetDateTime.now();
 
         this.validate();
@@ -76,11 +76,8 @@ public class Client extends AggregateRoot<ClientId> {
     }
 
     private void validate() {
-        if (this.name == "") {
+        if (this.name == "" || this.name == null) {
             throw new IllegalArgumentException("name is required");
-        }
-        if (this.email == "") {
-            throw new IllegalArgumentException("email is required");
         }
     }
 
@@ -88,7 +85,7 @@ public class Client extends AggregateRoot<ClientId> {
         return name;
     }
 
-    public String getEmail() {
+    public Email getEmail() {
         return email;
     }
 

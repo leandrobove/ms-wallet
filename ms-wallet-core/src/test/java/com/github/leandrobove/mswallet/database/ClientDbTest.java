@@ -27,7 +27,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldSaveClient() {
-        Client client = Client.create("John", "j@j.com");
+        Client client = Client.create("John", "john@gmail.com");
         clientGateway.save(client);
 
         Client clientFound = clientGateway.findById(client.getId()).get();
@@ -48,10 +48,10 @@ public class ClientDbTest {
 
     @Test
     public void shouldFindClientByEmail() {
-        Client client = Client.create("John", "j@j.com");
+        Client client = Client.create("John", "john@gmail.com");
         clientGateway.save(client);
 
-        Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail());
+        Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail().value());
 
         assertThat(clientOptional).isPresent();
         assertThat(clientOptional.get().getEmail()).isEqualTo(client.getEmail());
@@ -59,7 +59,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldNotFindClientByEmail() {
-        Optional<Client> clientOptional = clientGateway.findByEmail("nonexistingemail@j.com");
+        Optional<Client> clientOptional = clientGateway.findByEmail("nonexistingemail@gmail.com");
         assertThat(clientOptional).isEmpty();
     }
 }
