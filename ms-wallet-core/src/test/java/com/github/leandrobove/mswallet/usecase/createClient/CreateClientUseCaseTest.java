@@ -5,6 +5,7 @@ import com.github.leandrobove.mswallet.application.usecase.createClient.CreateCl
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseInput;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseOutput;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Email;
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -48,12 +49,12 @@ public class CreateClientUseCaseTest {
 
     @Test
     public void shouldNotCreateClientWhenEmailAlreadyExists() {
-        String email = "john@gmail.com";
-        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", email)));
+        Email email = Email.from("john@gmail.com");
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", email.value())));
 
         var input = CreateClientUseCaseInput.builder()
                 .name("John")
-                .email(email)
+                .email(email.value())
                 .build();
 
         assertThrows(EmailAlreadyExistsException.class, () -> {

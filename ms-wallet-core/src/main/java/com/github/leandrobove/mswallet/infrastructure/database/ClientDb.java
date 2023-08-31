@@ -3,6 +3,7 @@ package com.github.leandrobove.mswallet.infrastructure.database;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
+import com.github.leandrobove.mswallet.domain.entity.Email;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -28,11 +29,11 @@ public class ClientDb implements ClientGateway {
     }
 
     @Override
-    public Optional<Client> findByEmail(String email) {
+    public Optional<Client> findByEmail(Email email) {
         String sql = """
                 SELECT id, name, email, created_at, updated_at FROM client WHERE email = ?;
                 """;
-        return jdbcTemplate.query(sql, new ClientRowMapper(), email)
+        return jdbcTemplate.query(sql, new ClientRowMapper(), email.value())
                 .stream()
                 .findFirst();
     }

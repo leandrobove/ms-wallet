@@ -2,6 +2,7 @@ package com.github.leandrobove.mswallet.application.usecase.createClient;
 
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Email;
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -34,7 +35,7 @@ public class CreateClientUseCase {
 
     private void verifyEmailAlreadyExists(final String email) {
         //verify whether email already exists
-        if (clientGateway.findByEmail(email).isPresent()) {
+        if (clientGateway.findByEmail(Email.from(email)).isPresent()) {
             throw new EmailAlreadyExistsException(String.format("email %s already exists", email));
         }
     }

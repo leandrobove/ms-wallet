@@ -3,6 +3,7 @@ package com.github.leandrobove.mswallet.database;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
+import com.github.leandrobove.mswallet.domain.entity.Email;
 import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,7 +52,7 @@ public class ClientDbTest {
         Client client = Client.create("John", "john@gmail.com");
         clientGateway.save(client);
 
-        Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail().value());
+        Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail());
 
         assertThat(clientOptional).isPresent();
         assertThat(clientOptional.get().getEmail()).isEqualTo(client.getEmail());
@@ -59,7 +60,8 @@ public class ClientDbTest {
 
     @Test
     public void shouldNotFindClientByEmail() {
-        Optional<Client> clientOptional = clientGateway.findByEmail("nonexistingemail@gmail.com");
+        Email nonExistingEmail = Email.from("nonexistingemail@gmail.com");
+        Optional<Client> clientOptional = clientGateway.findByEmail(nonExistingEmail);
         assertThat(clientOptional).isEmpty();
     }
 }
