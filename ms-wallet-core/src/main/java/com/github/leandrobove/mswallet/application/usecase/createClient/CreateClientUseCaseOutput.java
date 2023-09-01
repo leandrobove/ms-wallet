@@ -19,7 +19,7 @@ public class CreateClientUseCaseOutput {
     public static CreateClientUseCaseOutput from(final Client client) {
         return CreateClientUseCaseOutput.builder()
                 .id(client.getId().value())
-                .name(client.getName())
+                .name(client.getName().fullName())
                 .email(client.getEmail().value())
                 .createdAt(client.getCreatedAt())
                 .updatedAt(client.getUpdatedAt())

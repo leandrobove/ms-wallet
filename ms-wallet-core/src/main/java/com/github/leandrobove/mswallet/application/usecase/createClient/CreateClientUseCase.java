@@ -7,8 +7,6 @@ import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsExcept
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import static java.util.Objects.isNull;
-
 @Service
 public class CreateClientUseCase {
     private final ClientGateway clientGateway;
@@ -19,14 +17,14 @@ public class CreateClientUseCase {
 
     @Transactional
     public CreateClientUseCaseOutput execute(final CreateClientUseCaseInput input) {
-        this.validateInput(input);
 
-        var name = input.getName();
+        var firstName = input.getFirstName();
+        var lastName = input.getLastName();
         var email = input.getEmail();
 
         this.verifyEmailAlreadyExists(email);
 
-        Client client = Client.create(name, email);
+        Client client = Client.create(firstName, lastName, email);
 
         clientGateway.save(client);
 
@@ -34,15 +32,10 @@ public class CreateClientUseCase {
     }
 
     private void verifyEmailAlreadyExists(final String email) {
-        //verify whether email already exists
-        if (clientGateway.findByEmail(Email.from(email)).isPresent()) {
-            throw new EmailAlreadyExistsException(String.format("email %s already exists", email));
-        }
-    }
+        var emailValidated = Email.from(email);
 
-    private void validateInput(final CreateClientUseCaseInput input) {
-        if (isNull(input.getEmail()) || input.getEmail() == "") {
-            throw new IllegalArgumentException("email is required");
+        if (clientGateway.findByEmail(emailValidated).isPresent()) {
+            throw new EmailAlreadyExistsException(String.format("email %s already exists", email));
         }
     }
 }

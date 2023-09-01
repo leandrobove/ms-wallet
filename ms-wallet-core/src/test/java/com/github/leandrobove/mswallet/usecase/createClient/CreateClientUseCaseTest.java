@@ -32,7 +32,8 @@ public class CreateClientUseCaseTest {
     @Test
     public void shouldCreateClientUseCase() {
         var input = CreateClientUseCaseInput.builder()
-                .name("John")
+                .firstName("John")
+                .lastName("Brad")
                 .email("john@gmail.com")
                 .build();
 
@@ -41,7 +42,7 @@ public class CreateClientUseCaseTest {
         verify(clientGateway, times(1)).save(any(Client.class));
 
         assertThat(output.getId()).isNotNull();
-        assertThat(output.getName()).isEqualTo("John");
+        assertThat(output.getName()).isEqualTo("John Brad");
         assertThat(output.getEmail()).isEqualTo("john@gmail.com");
         assertThat(output.getCreatedAt()).isNotNull();
         assertThat(output.getUpdatedAt()).isNotNull();
@@ -50,10 +51,11 @@ public class CreateClientUseCaseTest {
     @Test
     public void shouldNotCreateClientWhenEmailAlreadyExists() {
         Email email = Email.from("john@gmail.com");
-        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", email.value())));
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "Brad", email.value())));
 
         var input = CreateClientUseCaseInput.builder()
-                .name("John")
+                .firstName("John")
+                .lastName("Brad")
                 .email(email.value())
                 .build();
 
@@ -63,10 +65,24 @@ public class CreateClientUseCaseTest {
     }
 
     @Test
-    public void shouldNotCreateClientWhenNameIsMissing() {
+    public void shouldNotCreateClientWhenFirstNameIsMissing() {
         var input = CreateClientUseCaseInput.builder()
-                .name("")
-                .email("j@j.com")
+                .firstName("")
+                .lastName("Brad")
+                .email("john@gmail.com")
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            var output = useCase.execute(input);
+        });
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenLastNameIsMissing() {
+        var input = CreateClientUseCaseInput.builder()
+                .firstName("John")
+                .lastName("")
+                .email("john@gmail.com")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -77,7 +93,8 @@ public class CreateClientUseCaseTest {
     @Test
     public void shouldNotCreateClientWhenEmailIsMissing() {
         var input = CreateClientUseCaseInput.builder()
-                .name("John")
+                .firstName("John")
+                .lastName("Brad")
                 .email("")
                 .build();
 

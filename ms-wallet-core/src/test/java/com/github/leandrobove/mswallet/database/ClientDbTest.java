@@ -28,7 +28,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldSaveClient() {
-        Client client = Client.create("John", "john@gmail.com");
+        Client client = Client.create("John", "Brad", "john@gmail.com");
         clientGateway.save(client);
 
         Client clientFound = clientGateway.findById(client.getId()).get();
@@ -49,7 +49,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldFindClientByEmail() {
-        Client client = Client.create("John", "john@gmail.com");
+        Client client = Client.create("John", "Brad", "john@gmail.com");
         clientGateway.save(client);
 
         Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail());

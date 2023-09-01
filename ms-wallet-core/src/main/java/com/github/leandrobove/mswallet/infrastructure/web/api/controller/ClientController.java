@@ -19,7 +19,8 @@ public class ClientController implements ClientAPI {
     public CreateClientResponse create(CreateClientRequest request) {
 
         var input = CreateClientUseCaseInput.from(
-                request.getName(),
+                request.getFirstName(),
+                request.getLastName(),
                 request.getEmail()
         );
 

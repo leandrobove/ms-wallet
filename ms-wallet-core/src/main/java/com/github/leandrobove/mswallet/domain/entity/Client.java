@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Client extends AggregateRoot<ClientId> {
 
-    private String name;
+    private FullName fullName;
     private Email email;
     private List<Account> accounts;
     private OffsetDateTime createdAt;
@@ -16,53 +16,48 @@ public class Client extends AggregateRoot<ClientId> {
 
     private Client(
             final ClientId id,
-            final String name,
+            final FullName fullName,
             final Email email,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
         super(id);
-        this.name = name;
+        this.fullName = fullName;
         this.email = email;
         this.accounts = new ArrayList<>();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
-
-        this.validate();
     }
 
     public static Client create(
-            final String name,
+            final String firstName,
+            final String lastName,
             final String email
     ) {
         var clientId = ClientId.unique();
         var now = OffsetDateTime.now();
 
-        return new Client(clientId, name, Email.from(email), now, now);
+        return new Client(clientId, FullName.from(firstName, lastName), Email.from(email), now, now);
     }
 
     public static Client rebuildClient(
             final String id,
-            final String name,
+            final String fullName,
             final String email,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
-        return new Client(ClientId.from(id), name, Email.from(email), createdAt, updatedAt);
+        return new Client(ClientId.from(id), FullName.from(fullName), Email.from(email), createdAt, updatedAt);
     }
 
-    public void changeName(final String name) {
-        this.name = name;
+    public void changeName(final FullName fullName) {
+        this.fullName = fullName;
         this.updatedAt = OffsetDateTime.now();
-
-        this.validate();
     }
 
-    public void changeEmail(final String email) {
-        this.email = Email.from(email);
+    public void changeEmail(final Email email) {
+        this.email = email;
         this.updatedAt = OffsetDateTime.now();
-
-        this.validate();
     }
 
     public void addAccount(final Account account) {
@@ -75,14 +70,8 @@ public class Client extends AggregateRoot<ClientId> {
         this.accounts.add(account);
     }
 
-    private void validate() {
-        if (this.name == "" || this.name == null) {
-            throw new IllegalArgumentException("name is required");
-        }
-    }
-
-    public String getName() {
-        return name;
+    public FullName getName() {
+        return fullName;
     }
 
     public Email getEmail() {

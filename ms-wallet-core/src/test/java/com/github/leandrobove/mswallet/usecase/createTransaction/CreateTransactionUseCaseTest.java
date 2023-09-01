@@ -45,8 +45,8 @@ public class CreateTransactionUseCaseTest {
 
     @Test
     public void shouldCreateTransaction() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@gmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@gmail.com");
 
         Account accountFrom = Account.create(client1);
         Account accountTo = Account.create(client2);
@@ -102,7 +102,7 @@ public class CreateTransactionUseCaseTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAccountToNotFound() {
-        Client client1 = Client.create("John", "john@gmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
         Account accountFrom = Account.create(client1);
         client1.addAccount(accountFrom);
         accountFrom.credit(new BigDecimal(1000.00));
@@ -150,8 +150,8 @@ public class CreateTransactionUseCaseTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAmountIsMissing() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@gmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@gmail.com");
 
         Account accountFrom = Account.create(client1);
         Account accountTo = Account.create(client2);
@@ -182,8 +182,8 @@ public class CreateTransactionUseCaseTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAmountIsEqualToZero() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@gmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@gmail.com");
 
         Account accountFrom = Account.create(client1);
         Account accountTo = Account.create(client2);

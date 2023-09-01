@@ -9,7 +9,10 @@ public final class FullName implements ValueObject {
     private final String firstName;
     private final String lastName;
 
-    public FullName(String firstName, String lastName) {
+    private static final String ALLOWED_CHARACTERS = "[a-zA-Z ]*";
+    private static final int MIN_CHARS = 2;
+
+    private FullName(String firstName, String lastName) {
         if (firstName == null || firstName.isBlank()) {
             throw new IllegalArgumentException("firstName is required");
         }
@@ -30,11 +33,26 @@ public final class FullName implements ValueObject {
         this.lastName = lastName;
     }
 
+    public static FullName from(final String firstName, final String lastName) {
+        return new FullName(firstName, lastName);
+    }
+
+    public static FullName from(final String fullName) {
+        String[] nameSplit = fullName.split("\\s+");
+
+        var firstName = nameSplit[0];
+        var lastName = nameSplit[1];
+
+        return new FullName(firstName, lastName);
+    }
+
     public boolean isValid(final String firstName, final String lastName) {
-        if (firstName.length() < 2) {
+        if (firstName.length() < MIN_CHARS || lastName.length() < MIN_CHARS) {
             return false;
         }
-        if (lastName.length() < 2) {
+
+        //check if it has only allowed characters
+        if (!firstName.matches(ALLOWED_CHARACTERS) || !lastName.matches(ALLOWED_CHARACTERS)) {
             return false;
         }
 
@@ -45,16 +63,16 @@ public final class FullName implements ValueObject {
         return !this.isValid(firstName, lastName);
     }
 
-    public String getFirstName() {
+    public String firstName() {
         return firstName;
     }
 
-    public String getLastName() {
+    public String lastName() {
         return lastName;
     }
 
-    public String getFullName() {
-        return this.getFirstName() + " " + this.getLastName();
+    public String fullName() {
+        return this.firstName() + " " + this.lastName();
     }
 
     @Override
@@ -73,7 +91,7 @@ public final class FullName implements ValueObject {
     @Override
     public String toString() {
         return "FullName{" +
-                "value='" + this.getFullName() + '\'' +
+                "value='" + this.fullName() + '\'' +
                 '}';
     }
 }

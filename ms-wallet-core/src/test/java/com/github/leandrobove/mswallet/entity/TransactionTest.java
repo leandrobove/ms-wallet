@@ -14,8 +14,8 @@ public class TransactionTest {
 
     @Test
     public void shouldCreateTransaction() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@hotmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@hotmail.com");
 
         Account account1 = Account.create(client1);
         Account account2 = Account.create(client2);
@@ -39,7 +39,7 @@ public class TransactionTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAccountFromIsNull() {
-        Client client2 = Client.create("Jack Doe", "jackdoe@hotmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@hotmail.com");
         Account account2 = Account.create(client2);
         client2.addAccount(account2);
         account2.credit(new BigDecimal(1000.00));
@@ -52,7 +52,7 @@ public class TransactionTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAccountToIsNull() {
-        Client client1 = Client.create("John", "john@gmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
         Account account1 = Account.create(client1);
         client1.addAccount(account1);
         account1.credit(new BigDecimal(1000.00));
@@ -65,8 +65,8 @@ public class TransactionTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAmountIsEqualToZero() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@hotmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@hotmail.com");
 
         Account account1 = Account.create(client1);
         Account account2 = Account.create(client2);
@@ -85,8 +85,8 @@ public class TransactionTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAmountIsNegative() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@hotmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@hotmail.com");
 
         Account account1 = Account.create(client1);
         Account account2 = Account.create(client2);
@@ -105,8 +105,8 @@ public class TransactionTest {
 
     @Test
     public void shouldNotCreateTransactionWhenAccountBalanceIsInsufficient() {
-        Client client1 = Client.create("John", "john@gmail.com");
-        Client client2 = Client.create("Jack Doe", "jackdoe@hotmail.com");
+        Client client1 = Client.create("John", "Brad", "john@gmail.com");
+        Client client2 = Client.create("Jack", "Doe", "jackdoe@hotmail.com");
 
         Account account1 = Account.create(client1);
         Account account2 = Account.create(client2);

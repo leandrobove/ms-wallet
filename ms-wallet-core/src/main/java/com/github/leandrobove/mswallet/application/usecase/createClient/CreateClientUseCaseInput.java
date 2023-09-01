@@ -10,14 +10,17 @@ import lombok.Getter;
 public class CreateClientUseCaseInput {
 
     @NotBlank
-    private String name;
+    private String firstName;
+
+    @NotBlank
+    private String lastName;
 
     @NotBlank
     @Email
     private String email;
 
-    public static CreateClientUseCaseInput from(String name, String email) {
-        return new CreateClientUseCaseInput(name, email);
+    public static CreateClientUseCaseInput from(String firstName, String lastName, String email) {
+        return new CreateClientUseCaseInput(firstName, lastName, email);
     }
 
 }
