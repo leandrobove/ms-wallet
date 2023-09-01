@@ -74,6 +74,14 @@ public class ClientTest {
     }
 
     @Test
+    public void shouldThrowExceptionWhenEmailIsInvalid() {
+        val ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            Client client = Client.create("John", "Brad", "j@j.com");
+        });
+        assertThat(ex.getMessage()).isEqualTo("a valid email address is required");
+    }
+
+    @Test
     public void shouldChangeName() {
         Client client = Client.create("John", "Brad", "john@gmail.com");
         assertThat(client.getName().firstName()).isEqualTo("John");
