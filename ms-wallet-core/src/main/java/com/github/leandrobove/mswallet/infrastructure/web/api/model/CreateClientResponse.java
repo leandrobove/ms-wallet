@@ -8,6 +8,7 @@ public record CreateClientResponse(
         String id,
         String name,
         String email,
+        String cpf,
         @JsonProperty("created_at") OffsetDateTime createdAt,
         @JsonProperty("updated_at") OffsetDateTime updatedAt
 ) {

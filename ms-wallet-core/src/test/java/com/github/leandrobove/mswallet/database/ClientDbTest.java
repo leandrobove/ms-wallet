@@ -1,6 +1,7 @@
 package com.github.leandrobove.mswallet.database;
 
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
+import com.github.leandrobove.mswallet.domain.entity.CPF;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
 import com.github.leandrobove.mswallet.domain.entity.Email;
@@ -28,7 +29,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldSaveClient() {
-        Client client = Client.create("John", "Brad", "john@gmail.com");
+        Client client = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
         clientGateway.save(client);
 
         Client clientFound = clientGateway.findById(client.getId()).get();
@@ -36,12 +37,13 @@ public class ClientDbTest {
         assertThat(client.getId()).isEqualTo(clientFound.getId());
         assertThat(client.getName()).isEqualTo(clientFound.getName());
         assertThat(client.getEmail()).isEqualTo(clientFound.getEmail());
+        assertThat(client.getCpf()).isEqualTo(clientFound.getCpf());
         assertThat(client.getCreatedAt()).isNotNull();
         assertThat(client.getUpdatedAt()).isNotNull();
     }
 
     @Test
-    public void shouldNotFindClient() {
+    public void shouldNotFindClientById() {
         Optional<Client> client = clientGateway.findById(ClientId.unique());
 
         assertThat(client).isEqualTo(Optional.empty());
@@ -49,7 +51,7 @@ public class ClientDbTest {
 
     @Test
     public void shouldFindClientByEmail() {
-        Client client = Client.create("John", "Brad", "john@gmail.com");
+        Client client = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
         clientGateway.save(client);
 
         Optional<Client> clientOptional = clientGateway.findByEmail(client.getEmail());
@@ -62,6 +64,24 @@ public class ClientDbTest {
     public void shouldNotFindClientByEmail() {
         Email nonExistingEmail = Email.from("nonexistingemail@gmail.com");
         Optional<Client> clientOptional = clientGateway.findByEmail(nonExistingEmail);
+        assertThat(clientOptional).isEmpty();
+    }
+
+    @Test
+    public void shouldFindClientByCpf() {
+        Client client = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
+        clientGateway.save(client);
+
+        Optional<Client> clientOptional = clientGateway.findByCpf(client.getCpf());
+
+        assertThat(clientOptional).isPresent();
+        assertThat(clientOptional.get().getCpf()).isEqualTo(client.getCpf());
+    }
+
+    @Test
+    public void shouldNotFindClientByCpf() {
+        var nonExistingCpf = CPF.from("297.263.110-20");
+        Optional<Client> clientOptional = clientGateway.findByCpf(nonExistingCpf);
         assertThat(clientOptional).isEmpty();
     }
 }

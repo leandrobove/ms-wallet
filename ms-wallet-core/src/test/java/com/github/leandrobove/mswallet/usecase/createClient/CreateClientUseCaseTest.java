@@ -4,8 +4,10 @@ import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCase;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseInput;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseOutput;
+import com.github.leandrobove.mswallet.domain.entity.CPF;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.Email;
+import com.github.leandrobove.mswallet.domain.exception.CpfAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -35,6 +37,7 @@ public class CreateClientUseCaseTest {
                 .firstName("John")
                 .lastName("Brad")
                 .email("john@gmail.com")
+                .cpf("297.263.110-20")
                 .build();
 
         CreateClientUseCaseOutput output = useCase.execute(input);
@@ -44,6 +47,7 @@ public class CreateClientUseCaseTest {
         assertThat(output.getId()).isNotNull();
         assertThat(output.getName()).isEqualTo("John Brad");
         assertThat(output.getEmail()).isEqualTo("john@gmail.com");
+        assertThat(output.getCpf()).isEqualTo("29726311020");
         assertThat(output.getCreatedAt()).isNotNull();
         assertThat(output.getUpdatedAt()).isNotNull();
     }
@@ -51,15 +55,33 @@ public class CreateClientUseCaseTest {
     @Test
     public void shouldNotCreateClientWhenEmailAlreadyExists() {
         Email email = Email.from("john@gmail.com");
-        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "Brad", email.value())));
+        when(clientGateway.findByEmail(email)).thenReturn(Optional.of(Client.create("John", "Brad", email.value(), "297.263.110-20")));
 
         var input = CreateClientUseCaseInput.builder()
                 .firstName("John")
                 .lastName("Brad")
                 .email(email.value())
+                .cpf("297.263.110-20")
                 .build();
 
         assertThrows(EmailAlreadyExistsException.class, () -> {
+            var output = useCase.execute(input);
+        });
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenCpfAlreadyExists() {
+        CPF cpf = CPF.from("297.263.110-20");
+        when(clientGateway.findByCpf(cpf)).thenReturn(Optional.of(Client.create("John", "Brad", "john@gmail.com", "297.263.110-20")));
+
+        var input = CreateClientUseCaseInput.builder()
+                .firstName("John")
+                .lastName("Brad")
+                .email("john@gmail.com")
+                .cpf("297.263.110-20")
+                .build();
+
+        assertThrows(CpfAlreadyExistsException.class, () -> {
             var output = useCase.execute(input);
         });
     }
@@ -70,6 +92,7 @@ public class CreateClientUseCaseTest {
                 .firstName("")
                 .lastName("Brad")
                 .email("john@gmail.com")
+                .cpf("297.263.110-20")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -83,6 +106,7 @@ public class CreateClientUseCaseTest {
                 .firstName("John")
                 .lastName("")
                 .email("john@gmail.com")
+                .cpf("297.263.110-20")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {
@@ -96,6 +120,21 @@ public class CreateClientUseCaseTest {
                 .firstName("John")
                 .lastName("Brad")
                 .email("")
+                .cpf("297.263.110-20")
+                .build();
+
+        assertThrows(IllegalArgumentException.class, () -> {
+            var output = useCase.execute(input);
+        });
+    }
+
+    @Test
+    public void shouldNotCreateClientWhenCpfIsMissing() {
+        var input = CreateClientUseCaseInput.builder()
+                .firstName("John")
+                .lastName("Brad")
+                .email("john@gmail.com")
+                .cpf("")
                 .build();
 
         assertThrows(IllegalArgumentException.class, () -> {

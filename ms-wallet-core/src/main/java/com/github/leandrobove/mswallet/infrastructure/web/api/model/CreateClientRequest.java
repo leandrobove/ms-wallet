@@ -5,6 +5,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Data
 @AllArgsConstructor
@@ -21,4 +22,8 @@ public class CreateClientRequest {
     @NotBlank
     @Email
     private String email;
+
+    @NotBlank
+    @CPF
+    private String cpf;
 }

@@ -26,7 +26,7 @@ public final class CPF implements ValueObject {
         this.value = value;
     }
 
-    public static CPF from(String cpf) {
+    public static CPF from(final String cpf) {
         return new CPF(cpf);
     }
 
@@ -71,7 +71,7 @@ public final class CPF implements ValueObject {
         return !this.isValid(cpf);
     }
 
-    private String format() {
+    public String format() {
         return value.substring(0, 3) + "." + value.substring(3, 6) + "." +
                 value.substring(6, 9) + "-" + value.substring(9);
     }

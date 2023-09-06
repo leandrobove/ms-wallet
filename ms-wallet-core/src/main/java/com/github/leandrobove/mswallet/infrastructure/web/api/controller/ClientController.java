@@ -2,6 +2,7 @@ package com.github.leandrobove.mswallet.infrastructure.web.api.controller;
 
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCase;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseInput;
+import com.github.leandrobove.mswallet.domain.entity.CPF;
 import com.github.leandrobove.mswallet.infrastructure.web.api.ClientAPI;
 import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateClientRequest;
 import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateClientResponse;
@@ -21,7 +22,8 @@ public class ClientController implements ClientAPI {
         var input = CreateClientUseCaseInput.from(
                 request.getFirstName(),
                 request.getLastName(),
-                request.getEmail()
+                request.getEmail(),
+                request.getCpf()
         );
 
         var output = createClientUseCase.execute(input);
@@ -30,6 +32,7 @@ public class ClientController implements ClientAPI {
                 output.getId(),
                 output.getName(),
                 output.getEmail(),
+                CPF.from(output.getCpf()).format(),
                 output.getCreatedAt(),
                 output.getUpdatedAt()
         );

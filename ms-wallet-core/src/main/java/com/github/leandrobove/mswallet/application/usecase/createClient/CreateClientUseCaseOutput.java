@@ -13,6 +13,7 @@ public class CreateClientUseCaseOutput {
     private String id;
     private String name;
     private String email;
+    private String cpf;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 
@@ -21,6 +22,7 @@ public class CreateClientUseCaseOutput {
                 .id(client.getId().value())
                 .name(client.getName().fullName())
                 .email(client.getEmail().value())
+                .cpf(client.getCpf().value())
                 .createdAt(client.getCreatedAt())
                 .updatedAt(client.getUpdatedAt())
                 .build();

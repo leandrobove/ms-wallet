@@ -25,6 +25,7 @@ public class AccountDb implements AccountGateway {
                 "c.id, " +
                 "c.name, " +
                 "c.email, " +
+                "c.cpf, " +
                 "c.created_at, " +
                 "c.updated_at " +
                 "FROM account a INNER JOIN client c " +

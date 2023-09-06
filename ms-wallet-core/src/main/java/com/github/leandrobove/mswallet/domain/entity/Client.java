@@ -10,6 +10,7 @@ public class Client extends AggregateRoot<ClientId> {
 
     private FullName fullName;
     private Email email;
+    private CPF cpf;
     private List<Account> accounts;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
@@ -18,12 +19,14 @@ public class Client extends AggregateRoot<ClientId> {
             final ClientId id,
             final FullName fullName,
             final Email email,
+            final CPF cpf,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
         super(id);
         this.fullName = fullName;
         this.email = email;
+        this.cpf = cpf;
         this.accounts = new ArrayList<>();
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -32,22 +35,24 @@ public class Client extends AggregateRoot<ClientId> {
     public static Client create(
             final String firstName,
             final String lastName,
-            final String email
+            final String email,
+            final String cpf
     ) {
         var clientId = ClientId.unique();
         var now = OffsetDateTime.now();
 
-        return new Client(clientId, FullName.from(firstName, lastName), Email.from(email), now, now);
+        return new Client(clientId, FullName.from(firstName, lastName), Email.from(email), CPF.from(cpf), now, now);
     }
 
     public static Client rebuildClient(
             final String id,
             final String fullName,
             final String email,
+            final String cpf,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
-        return new Client(ClientId.from(id), FullName.from(fullName), Email.from(email), createdAt, updatedAt);
+        return new Client(ClientId.from(id), FullName.from(fullName), Email.from(email), CPF.from(cpf), createdAt, updatedAt);
     }
 
     public void changeName(final FullName fullName) {
@@ -76,6 +81,10 @@ public class Client extends AggregateRoot<ClientId> {
 
     public Email getEmail() {
         return email;
+    }
+
+    public CPF getCpf() {
+        return cpf;
     }
 
     public List<Account> getAccounts() {

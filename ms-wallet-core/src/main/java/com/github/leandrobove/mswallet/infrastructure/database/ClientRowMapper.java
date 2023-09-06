@@ -15,6 +15,7 @@ public class ClientRowMapper implements RowMapper<Client> {
                 rs.getString("id"),
                 rs.getString("name"),
                 rs.getString("email"),
+                rs.getString("cpf"),
                 rs.getObject("created_at", OffsetDateTime.class),
                 rs.getObject("updated_at", OffsetDateTime.class)
         );

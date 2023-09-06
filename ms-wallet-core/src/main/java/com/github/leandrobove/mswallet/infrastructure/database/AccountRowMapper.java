@@ -16,8 +16,9 @@ public class AccountRowMapper implements RowMapper<Account> {
                 rs.getString(5),
                 rs.getString(6),
                 rs.getString(7),
-                rs.getObject(8, OffsetDateTime.class),
-                rs.getObject(9, OffsetDateTime.class)
+                rs.getString(8),
+                rs.getObject(9, OffsetDateTime.class),
+                rs.getObject(10, OffsetDateTime.class)
         );
 
         return Account.rebuildAccount(

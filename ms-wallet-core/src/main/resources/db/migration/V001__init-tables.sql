@@ -2,9 +2,10 @@ create table client(
     id varchar(32) not null primary key,
     name varchar(255) not null,
     email varchar(255) not null,
+    cpf varchar(11) not null,
     created_at timestamp not null,
     updated_at timestamp not null,
-    unique(email)
+    unique(email, cpf)
 );
 
 create table account(

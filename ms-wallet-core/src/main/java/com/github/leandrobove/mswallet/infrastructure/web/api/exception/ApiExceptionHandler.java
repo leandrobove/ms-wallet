@@ -1,5 +1,6 @@
 package com.github.leandrobove.mswallet.infrastructure.web.api.exception;
 
+import com.github.leandrobove.mswallet.domain.exception.CpfAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
@@ -35,6 +36,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<?> handleEmailAlreadyExists(EmailAlreadyExistsException ex, WebRequest req) {
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        String message = ex.getMessage();
+
+        return new ResponseEntity<>(new ApiError(status.value(), message, OffsetDateTime.now()), status);
+    }
+
+    @ExceptionHandler(CpfAlreadyExistsException.class)
+    public ResponseEntity<?> handleCpfAlreadyExists(CpfAlreadyExistsException ex, WebRequest req) {
         HttpStatus status = HttpStatus.BAD_REQUEST;
         String message = ex.getMessage();
 

@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class AccountTest {
 
-    private static final Client CLIENT = Client.create("John", "Brad", "john@gmail.com");
+    private static final Client CLIENT = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
 
     @Test
     public void shouldCreateNewAccount() {

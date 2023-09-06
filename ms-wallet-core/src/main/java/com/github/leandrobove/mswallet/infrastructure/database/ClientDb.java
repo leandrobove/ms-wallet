@@ -1,6 +1,7 @@
 package com.github.leandrobove.mswallet.infrastructure.database;
 
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
+import com.github.leandrobove.mswallet.domain.entity.CPF;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
 import com.github.leandrobove.mswallet.domain.entity.Email;
@@ -21,7 +22,7 @@ public class ClientDb implements ClientGateway {
     @Override
     public Optional<Client> findById(ClientId clientId) {
         String sql = """
-                SELECT id, name, email, created_at, updated_at FROM client WHERE id = ?;
+                SELECT id, name, email, cpf, created_at, updated_at FROM client WHERE id = ?;
                 """;
         return jdbcTemplate.query(sql, new ClientRowMapper(), clientId.value())
                 .stream()
@@ -31,7 +32,7 @@ public class ClientDb implements ClientGateway {
     @Override
     public Optional<Client> findByEmail(Email email) {
         String sql = """
-                SELECT id, name, email, created_at, updated_at FROM client WHERE email = ?;
+                SELECT id, name, email, cpf, created_at, updated_at FROM client WHERE email = ?;
                 """;
         return jdbcTemplate.query(sql, new ClientRowMapper(), email.value())
                 .stream()
@@ -39,11 +40,21 @@ public class ClientDb implements ClientGateway {
     }
 
     @Override
+    public Optional<Client> findByCpf(CPF cpf) {
+        String sql = """
+                SELECT id, name, email, cpf, created_at, updated_at FROM client WHERE cpf = ?;
+                """;
+        return jdbcTemplate.query(sql, new ClientRowMapper(), cpf.value())
+                .stream()
+                .findFirst();
+    }
+
+    @Override
     public void save(Client client) {
         String sql = """
-                INSERT INTO client(id, name, email, created_at, updated_at) VALUES(?,?,?,?,?);
+                INSERT INTO client(id, name, email, cpf, created_at, updated_at) VALUES(?,?,?,?,?,?);
                 """;
         jdbcTemplate.update(sql, client.getId().value(), client.getName().fullName(),
-                client.getEmail().value(), client.getCreatedAt(), client.getUpdatedAt());
+                client.getEmail().value(), client.getCpf().value(), client.getCreatedAt(), client.getUpdatedAt());
     }
 }

@@ -4,6 +4,7 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.validator.constraints.br.CPF;
 
 @Builder
 @Getter
@@ -19,8 +20,13 @@ public class CreateClientUseCaseInput {
     @Email
     private String email;
 
-    public static CreateClientUseCaseInput from(String firstName, String lastName, String email) {
-        return new CreateClientUseCaseInput(firstName, lastName, email);
+    @NotBlank
+    @CPF
+    private String cpf;
+
+    public static CreateClientUseCaseInput from(final String firstName, final String lastName,
+                                                final String email, final String cpf) {
+        return new CreateClientUseCaseInput(firstName, lastName, email, cpf);
     }
 
 }
