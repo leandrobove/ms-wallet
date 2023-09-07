@@ -19,11 +19,9 @@ public class CreateClientRequest {
     @NotBlank
     private String lastName;
 
-    @NotBlank
     @Email
     private String email;
 
-    @NotBlank
     @CPF
     private String cpf;
 }
