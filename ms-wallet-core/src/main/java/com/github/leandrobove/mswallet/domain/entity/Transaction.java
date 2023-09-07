@@ -62,6 +62,9 @@ public class Transaction extends AggregateRoot<TransactionId> {
         if (this.accountFrom.getBalance().compareTo(this.amount) < 0) {
             throw new IllegalArgumentException("insufficient funds");
         }
+        if (this.accountFrom.equals(accountTo)) {
+            throw new IllegalArgumentException("it's not allowed to transfer funds to the same account");
+        }
     }
 
     public Account getAccountFrom() {

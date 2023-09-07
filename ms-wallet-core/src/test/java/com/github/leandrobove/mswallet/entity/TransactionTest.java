@@ -119,4 +119,20 @@ public class TransactionTest {
         });
         assertThat(ex.getMessage()).isEqualTo("insufficient funds");
     }
+
+    @Test
+    public void shouldNotCreateTransactionWhenAccountFromIsEqualsToAccountTo() {
+        Client client1 = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
+
+        Account account1 = Account.create(client1);
+
+        client1.addAccount(account1);
+
+        account1.credit(new BigDecimal(1000.00));
+
+        var ex = assertThrows(IllegalArgumentException.class, () -> {
+            Transaction.transfer(account1, account1, new BigDecimal(20.00));
+        });
+        assertThat(ex.getMessage()).isEqualTo("it's not allowed to transfer funds to the same account");
+    }
 }
