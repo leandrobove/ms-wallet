@@ -38,16 +38,16 @@ public class CreateClientUseCase {
     private void verifyEmailAlreadyExists(final String email) {
         var emailValidated = Email.from(email);
 
-        if (clientGateway.findByEmail(emailValidated).isPresent()) {
-            throw new EmailAlreadyExistsException(String.format("email %s already exists", email));
-        }
+        clientGateway.findByEmail(emailValidated).ifPresent((client) -> {
+            throw new EmailAlreadyExistsException(emailValidated);
+        });
     }
 
     private void verifyCpfAlreadyExists(final String cpf) {
         var cpfValidated = CPF.from(cpf);
 
-        if (clientGateway.findByCpf(cpfValidated).isPresent()) {
-            throw new CpfAlreadyExistsException(String.format("cpf %s already exists", cpfValidated.format()));
-        }
+        clientGateway.findByCpf(cpfValidated).ifPresent((client) -> {
+            throw new CpfAlreadyExistsException(cpfValidated);
+        });
     }
 }

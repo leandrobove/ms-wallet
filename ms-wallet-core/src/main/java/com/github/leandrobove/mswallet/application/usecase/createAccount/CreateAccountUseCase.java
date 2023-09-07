@@ -28,7 +28,7 @@ public class CreateAccountUseCase {
     public CreateAccountUseCaseOutput execute(final CreateAccountUseCaseInput input) {
         this.validateInput(input);
 
-        Client client = this.findOrFail(input.getClientId());
+        Client client = this.findClientOrFail(input.getClientId());
 
         Account account = Account.create(client);
 
@@ -37,7 +37,7 @@ public class CreateAccountUseCase {
         return CreateAccountUseCaseOutput.from(account);
     }
 
-    private Client findOrFail(final String clientId) {
+    private Client findClientOrFail(final String clientId) {
         return clientGateway.findById(ClientId.from(clientId))
                 .orElseThrow(() -> new EntityNotFoundException(String.format("client id %s not found", clientId)));
     }
