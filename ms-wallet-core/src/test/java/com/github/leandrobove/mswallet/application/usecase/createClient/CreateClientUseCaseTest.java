@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.usecase.createClient;
+package com.github.leandrobove.mswallet.application.usecase.createClient;
 
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCase;

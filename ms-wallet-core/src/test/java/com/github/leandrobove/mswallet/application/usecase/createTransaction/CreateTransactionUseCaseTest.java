@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.usecase.createTransaction;
+package com.github.leandrobove.mswallet.application.usecase.createTransaction;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;

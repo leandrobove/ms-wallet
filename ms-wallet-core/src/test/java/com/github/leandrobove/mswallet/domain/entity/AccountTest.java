@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.entity;
+package com.github.leandrobove.mswallet.domain.entity;
 
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;

@@ -1,4 +1,4 @@
-package com.github.leandrobove.mswallet.database;
+package com.github.leandrobove.mswallet.infrastructure.database;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
