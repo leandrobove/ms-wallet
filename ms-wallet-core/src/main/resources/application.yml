@@ -1,3 +1,12 @@
+#Used for all profiles
+server:
+  port: 8080
+
+  compression:
+    enabled: true
+    mime-types: text/html,text/xml,text/plain,text/css,text/javascript,application/javascript,application/json
+    min-response-size: 1024
+
 spring:
   application:
     name: ms-wallet-core
@@ -25,3 +34,33 @@ management:
       enabled: true
     info:
       enabled: true
+
+---
+########################
+## 'dev' profile only ##
+########################
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    name: wallet
+    jdbc-url: jdbc:mysql://${wallet-core-db:localhost}/walletdb?serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: user
+    password: password
+    pool-size: 30
+
+  cloud:
+    stream:
+      kafka:
+        binder:
+          brokers: localhost:9092
+          auto-create-topics: true
+      bindings:
+        balanceUpdatedSupplier-out-0:
+          destination: wallet-core.v1.event.balance-updated
+          contentType: application/json
+        transactionCreatedSupplier-out-0:
+          destination: wallet-core.v1.event.transaction-created
+          contentType: application/json

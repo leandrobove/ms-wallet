@@ -5,8 +5,6 @@ import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.AccountId;
 import com.github.leandrobove.mswallet.domain.entity.Client;
-import com.github.leandrobove.mswallet.infrastructure.database.AccountDb;
-import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -14,7 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.math.BigDecimal;
 import java.util.Optional;
-import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
