@@ -1,12 +1,9 @@
 package com.github.leandrobove.mswallet.domain;
 
-import lombok.Getter;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Getter
 public abstract class AggregateRoot<ID extends DomainObjectId> extends Entity<ID> {
 
     private final List<DomainEvent> domainEvents;
