@@ -10,11 +10,15 @@ spring:
     mongodb:
       uri: mongodb://mongoadmin:secret@127.0.0.1:27017/balancedb?authSource=admin
 
-  # Serialization - Jackson
+  # Jackson
   jackson:
+    property-naming-strategy: SNAKE_CASE
+    time-zone: UTC
     deserialization:
       fail-on-unknown-properties: true
       fail-on-ignored-properties: true
+    serialization:
+      write-dates-as-timestamps: false
 
   cloud:
     stream:
@@ -23,22 +27,3 @@ spring:
       bindings:
         balanceUpdatedEventListener-in-0:
           destination: wallet-core.v1.event.balance-updated
-
-
-# Metrics - Spring Actuator
-management:
-  endpoints:
-    enabled-by-default: false
-    web:
-      exposure:
-        include: "metrics,health,info"
-  metrics:
-    enable:
-      executor: false
-  endpoint:
-    health:
-      enabled: true
-    metrics:
-      enabled: true
-    info:
-      enabled: true

@@ -11,8 +11,6 @@ services:
       MYSQL_USER: user
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
-    volumes:
-      - ./docker/walletdb:/var/lib/mysql
     restart: always
     networks:
       - wallet-core-network
@@ -26,8 +24,6 @@ services:
       MONGO_INITDB_DATABASE: balancedb
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: secret
-    volumes:
-      - ./docker/balancedb:/data/db
     restart: always
     networks:
       - balance-network

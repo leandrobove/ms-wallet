@@ -60,10 +60,10 @@ public class CreateTransactionUseCase {
     }
 
     private void validateInput(final CreateTransactionUseCaseInput input) {
-        if (isNull(input.getAccountFromId()) || input.getAccountFromId() == "") {
+        if (isNull(input.getAccountFromId()) || input.getAccountFromId().isBlank()) {
             throw new IllegalArgumentException("account id from is required");
         }
-        if (isNull(input.getAccountToId()) || input.getAccountToId() == "") {
+        if (isNull(input.getAccountToId()) || input.getAccountToId().isBlank()) {
             throw new IllegalArgumentException("account id to is required");
         }
     }

@@ -2,7 +2,7 @@ package com.github.leandrobove.mswallet.infrastructure.event.publisher;
 
 import com.github.leandrobove.mswallet.domain.DomainEvent;
 import com.github.leandrobove.mswallet.domain.EventPublisher;
-import com.github.leandrobove.mswallet.infrastructure.event.resolver.TopicResolver;
+import com.github.leandrobove.mswallet.infrastructure.event.publisher.resolver.TopicResolver;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cloud.stream.function.StreamBridge;
 import org.springframework.stereotype.Component;

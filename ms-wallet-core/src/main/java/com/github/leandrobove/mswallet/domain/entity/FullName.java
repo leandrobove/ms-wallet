@@ -9,7 +9,7 @@ public final class FullName implements ValueObject {
     private final String firstName;
     private final String lastName;
 
-    private static final String ALLOWED_CHARACTERS = "[a-zA-Z ]*";
+    private static final String ALLOWED_CHARACTERS = "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$";
     private static final int MIN_CHARS = 2;
 
     private FullName(String firstName, String lastName) {
