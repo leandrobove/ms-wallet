@@ -1,5 +1,6 @@
 server:
   port: 8080
+  use-forward-headers: true
 
   compression:
     enabled: true
