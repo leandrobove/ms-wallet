@@ -1,35 +1,6 @@
 version: "3.9"
 
 services:
-
-  nginx:
-    container_name: nginx
-    build: ./docker/nginx
-    restart: unless-stopped
-    ports:
-      - "80:80"
-    depends_on:
-      ms-wallet-core:
-        condition: service_started
-      ms-balance:
-        condition: service_started
-    networks:
-      - wallet-network
-
-  ms-wallet-core:
-    container_name: ms-wallet-core
-    build: ./ms-wallet-core
-    restart: unless-stopped
-    env_file:
-      - ./ms-wallet-core/.env
-    depends_on:
-      wallet-core-db:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-    networks:
-      - wallet-network
-
   wallet-core-db:
     image: mysql:8
     container_name: wallet-core-db
@@ -41,28 +12,8 @@ services:
       MYSQL_PASSWORD: password
       MYSQL_ROOT_PASSWORD: password
     restart: always
-    healthcheck:
-      test: mysqladmin ping -h 127.0.0.1 -u $$MYSQL_USER --password=$$MYSQL_PASSWORD
-      start_period: 15s
-      interval: 5s
-      timeout: 5s
-      retries: 6
     networks:
-      - wallet-network
-
-  ms-balance:
-    container_name: ms-balance
-    build: ./ms-balance
-    restart: unless-stopped
-    env_file:
-      - ./ms-balance/.env
-    depends_on:
-      balance-db:
-        condition: service_healthy
-      kafka:
-        condition: service_started
-    networks:
-      - wallet-network
+      - wallet-core-network
 
   balance-db:
     image: mongo:6.0.6
@@ -74,14 +25,8 @@ services:
       MONGO_INITDB_ROOT_USERNAME: mongoadmin
       MONGO_INITDB_ROOT_PASSWORD: secret
     restart: always
-    healthcheck:
-      test: echo 'db.runCommand("ping").ok' | mongosh localhost:27017/balancedb --quiet
-      interval: 10s
-      timeout: 10s
-      retries: 3
-      start_period: 20s
     networks:
-      - wallet-network
+      - balance-network
 
   zookeeper:
     image: "confluentinc/cp-zookeeper:6.1.0"
@@ -92,8 +37,6 @@ services:
       TZ: Sao_Paulo/Brazil
       ZOOKEEPER_CLIENT_PORT: 2181
       ZOOKEEPER_TICK_TIME: 2000
-    networks:
-      - wallet-network
 
   kafka:
     image: "confluentinc/cp-kafka:6.1.0"
@@ -118,9 +61,25 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
       KAFKA_GROUP_INITIAL_REBALANCE_DELAY_MS: 100
       CONFLUENT_METRICS_ENABLE: 'false'
-    networks:
-      - wallet-network
+
+  control-center:
+    image: confluentinc/cp-enterprise-control-center:7.3.0
+    hostname: control-center
+    container_name: control-center
+    depends_on:
+      - kafka
+    ports:
+      - "9021:9021"
+    environment:
+      CONTROL_CENTER_BOOTSTRAP_SERVERS: 'kafka:29092'
+      CONTROL_CENTER_REPLICATION_FACTOR: 1
+      CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
+      CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
+      CONFLUENT_METRICS_TOPIC_REPLICATION: 1
+      PORT: 9021
 
 networks:
-  wallet-network:
+  wallet-core-network:
+    driver: bridge
+  balance-network:
     driver: bridge

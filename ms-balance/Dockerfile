@@ -2,11 +2,11 @@ FROM eclipse-temurin:17-jre-alpine
 
 RUN mkdir /opt/app
 
-COPY ./target/*.jar /opt/app/wallet-core.jar
+COPY ./target/*.jar /opt/app/balance.jar
 
 RUN addgroup -S spring && adduser -S spring -G spring
 USER spring:spring
 
-EXPOSE 8080
+EXPOSE 8081
 
-CMD ["java", "-jar", "/opt/app/wallet-core.jar"]
+CMD ["java", "-jar", "/opt/app/balance.jar"]

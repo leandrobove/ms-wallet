@@ -8,7 +8,7 @@ spring:
   # Database - MongoDB
   data:
     mongodb:
-      uri: mongodb://mongoadmin:secret@127.0.0.1:27017/balancedb?authSource=admin
+      uri: mongodb://${DATABASE_MONGO_USERNAME:mongoadmin}:${DATABASE_MONGO_PASSWORD:secret}@${DATABASE_MONGO_HOST:127.0.0.1}:${DATABASE_MONGO_PORT:27017}/${DATABASE_MONGO_DBNAME:balancedb}?authSource=admin
 
   # Jackson
   jackson:
@@ -22,6 +22,9 @@ spring:
 
   cloud:
     stream:
+      kafka:
+        binder:
+          brokers: ${KAFKA_HOST:localhost:9092}
       function:
         definition: BalanceUpdatedEventListener
       bindings:

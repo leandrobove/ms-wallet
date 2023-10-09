@@ -31,9 +31,9 @@ spring:
 
   datasource:
     name: wallet
-    jdbc-url: jdbc:mysql://${wallet-core-db:localhost}/walletdb?serverTimezone=UTC&createDatabaseIfNotExist=true
-    username: user
-    password: password
+    jdbc-url: jdbc:mysql://${DATABASE_MYSQL_HOST:localhost}:${DATABASE_MYSQL_PORT:3306}/${DATABASE_MYSQL_DBNAME:walletdb}?serverTimezone=UTC&createDatabaseIfNotExist=true
+    username: ${DATABASE_MYSQL_USERNAME:user}
+    password: ${DATABASE_MYSQL_PASSWORD:password}
     pool-size: 30
 
   flyway:
@@ -43,7 +43,7 @@ spring:
     stream:
       kafka:
         binder:
-          brokers: localhost:9092
+          brokers: ${KAFKA_HOST:localhost:9092}
           auto-create-topics: true
       bindings:
         balanceUpdatedSupplier-out-0:
