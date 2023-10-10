@@ -21,12 +21,16 @@ spring:
       write-dates-as-timestamps: false
 
   cloud:
+    function:
+      definition: balanceUpdatedEventListener;accountCreatedEventListener
+
     stream:
       kafka:
         binder:
           brokers: ${KAFKA_HOST:localhost:9092}
-      function:
-        definition: BalanceUpdatedEventListener
+
       bindings:
         balanceUpdatedEventListener-in-0:
           destination: wallet-core.v1.event.balance-updated
+        accountCreatedEventListener-in-0:
+          destination: wallet-core.v1.event.account-created

@@ -2,20 +2,21 @@ package com.github.leandrobove.msbalance.event.listener;
 
 import com.github.leandrobove.msbalance.event.BalanceUpdatedEvent;
 import com.github.leandrobove.msbalance.model.Account;
-import com.github.leandrobove.msbalance.repository.AccountRepository;
+import com.github.leandrobove.msbalance.service.AccountService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.function.Consumer;
 
 @Slf4j
 @Component
 public class BalanceUpdatedEventListener implements Consumer<BalanceUpdatedEvent> {
-    private final AccountRepository accountRepository;
+    private final AccountService accountService;
 
-    public BalanceUpdatedEventListener(final AccountRepository accountRepository) {
-        this.accountRepository = accountRepository;
+    public BalanceUpdatedEventListener(final AccountService accountService) {
+        this.accountService = Objects.requireNonNull(accountService);
     }
 
     @Override
@@ -28,7 +29,7 @@ public class BalanceUpdatedEventListener implements Consumer<BalanceUpdatedEvent
                 balanceUpdatedEvent.getBalanceAccountTo());
 
         //persist account into database
-        accountRepository.saveAll(Arrays.asList(accountFrom, accountTo));
+        accountService.save(Arrays.asList(accountFrom, accountTo));
     }
 
 }
