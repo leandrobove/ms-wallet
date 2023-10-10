@@ -5,6 +5,7 @@ import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.AccountId;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Money;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
@@ -42,7 +43,7 @@ public class AccountDbTest {
 
         Account accountFound = accountOptional.get();
         assertThat(accountFound.getId()).isEqualTo(account.getId());
-        assertThat(accountFound.getBalance().doubleValue()).isEqualTo(account.getBalance().doubleValue());
+        assertThat(accountFound.getBalance()).isEqualTo(account.getBalance());
         assertThat(accountFound.getCreatedAt()).isNotNull();
         assertThat(accountFound.getUpdatedAt()).isNotNull();
 
@@ -69,9 +70,9 @@ public class AccountDbTest {
         accountGateway.save(account);
         assertThat(accountGateway.findById(account.getId())).isPresent();
 
-        account.credit(new BigDecimal(1000.00));
+        account.credit(Money.from(new BigDecimal(1000.00)));
         accountGateway.updateBalance(account);
         Account accountUpdated = accountGateway.findById(account.getId()).get();
-        assertThat(accountUpdated.getBalance().compareTo(new BigDecimal(1000.00))).isEqualTo(0);
+        assertThat(accountUpdated.getBalance().equals(Money.from(new BigDecimal(1000.00))));
     }
 }

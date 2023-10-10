@@ -1,7 +1,5 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
-import com.github.leandrobove.mswallet.domain.entity.Account;
-import com.github.leandrobove.mswallet.domain.entity.Client;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +17,7 @@ public class AccountTest {
 
         assertThat(account.getId()).isNotNull();
         assertThat(account.getClient()).isEqualTo(CLIENT);
-        assertThat(account.getBalance()).isEqualTo(BigDecimal.ZERO);
+        assertThat(account.getBalance()).isEqualTo(Money.ZERO);
         assertThat(account.getCreatedAt()).isNotNull();
         assertThat(account.getUpdatedAt()).isNotNull();
     }
@@ -35,11 +33,11 @@ public class AccountTest {
     @Test
     public void shouldCredit() {
         Account account = Account.create(CLIENT);
-        assertThat(account.getBalance()).isEqualTo(BigDecimal.ZERO);
-        account.credit(new BigDecimal(1000.00));
-        assertThat(account.getBalance()).isEqualTo(new BigDecimal(1000.00));
-        account.credit(new BigDecimal(500.00));
-        assertThat(account.getBalance()).isEqualTo(new BigDecimal(1500.00));
+        assertThat(account.getBalance()).isEqualTo(Money.ZERO);
+        account.credit(Money.from(BigDecimal.valueOf(1000.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.from(new BigDecimal(1000.00)));
+        account.credit(Money.from(BigDecimal.valueOf(500.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.from(new BigDecimal(1500.00)));
     }
 
     @Test
@@ -55,7 +53,7 @@ public class AccountTest {
     public void shouldNotCreditWhenAmountIsNegative() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Account account = Account.create(CLIENT);
-            account.credit(new BigDecimal(-100.00));
+            account.credit(Money.from(BigDecimal.valueOf(-100.00)));
         });
         assertThat(ex.getMessage()).isEqualTo("amount must be a positive number");
     }
@@ -64,7 +62,7 @@ public class AccountTest {
     public void shouldNotCreditWhenAmountIsEqualToZero() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Account account = Account.create(CLIENT);
-            account.credit(new BigDecimal(0.00));
+            account.credit(Money.from(BigDecimal.valueOf(0.00)));
         });
         assertThat(ex.getMessage()).isEqualTo("amount must be a positive number");
     }
@@ -73,8 +71,8 @@ public class AccountTest {
     public void shouldNotDebitWhenAmountIsNegative() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Account account = Account.create(CLIENT);
-            account.credit(new BigDecimal(100.00));
-            account.debit(new BigDecimal(-100.00));
+            account.credit(Money.from(BigDecimal.valueOf(100.00)));
+            account.debit(Money.from(BigDecimal.valueOf(-100.00)));
         });
         assertThat(ex.getMessage()).isEqualTo("amount must be a positive number");
     }
@@ -83,7 +81,7 @@ public class AccountTest {
     public void shouldNotDebitWhenAmountIsNull() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Account account = Account.create(CLIENT);
-            account.credit(new BigDecimal(1000.00));
+            account.credit(Money.from(BigDecimal.valueOf(1000.00)));
             account.debit(null);
         });
         assertThat(ex.getMessage()).isEqualTo("amount is required");
@@ -93,8 +91,8 @@ public class AccountTest {
     public void shouldNotDebitWhenInsufficientFundsInBalance() {
         IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, () -> {
             Account account = Account.create(CLIENT);
-            account.credit(new BigDecimal(1000.00));
-            account.debit(new BigDecimal(1000.01));
+            account.credit(Money.from(BigDecimal.valueOf(1000.00)));
+            account.debit(Money.from(BigDecimal.valueOf(1000.01)));
         });
         assertThat(ex.getMessage()).isEqualTo("insufficient funds");
     }
@@ -102,14 +100,14 @@ public class AccountTest {
     @Test
     public void shouldDebit() {
         Account account = Account.create(CLIENT);
-        assertThat(account.getBalance()).isEqualTo(BigDecimal.ZERO);
-        account.credit(new BigDecimal(1000.00));
-        assertThat(account.getBalance()).isEqualTo(new BigDecimal(1000.00));
-        account.debit(new BigDecimal(500.00));
-        assertThat(account.getBalance()).isEqualTo(new BigDecimal(500.00));
-        account.debit(new BigDecimal(250.00));
-        assertThat(account.getBalance()).isEqualTo(new BigDecimal(250.00));
-        account.debit(new BigDecimal(250.00));
-        assertThat(account.getBalance()).isEqualTo(BigDecimal.ZERO);
+        assertThat(account.getBalance()).isEqualTo(Money.ZERO);
+        account.credit(Money.from(BigDecimal.valueOf(1000.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.from(new BigDecimal(1000.00)));
+        account.debit(Money.from(BigDecimal.valueOf(500.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.from(new BigDecimal(500.00)));
+        account.debit(Money.from(BigDecimal.valueOf(250.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.from(new BigDecimal(250.00)));
+        account.debit(Money.from(BigDecimal.valueOf(250.00)));
+        assertThat(account.getBalance()).isEqualTo(Money.ZERO);
     }
 }

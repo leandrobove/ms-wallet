@@ -21,7 +21,7 @@ public class CreateTransactionUseCaseOutput {
                 .transactionId(transaction.getId().value())
                 .accountIdFrom(transaction.getAccountFrom().getId().value())
                 .accountIdTo(transaction.getAccountTo().getId().value())
-                .amount(transaction.getAmount())
+                .amount(transaction.getAmount().value())
                 .build();
     }
 }

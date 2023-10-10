@@ -30,7 +30,7 @@ public class TransactionCreatedEvent extends DomainEvent {
         this.transactionId = transaction.getId().value();
         this.accountIdFrom = accountFrom.getId().value();
         this.accountIdTo = accountTo.getId().value();
-        this.amount = transaction.getAmount();
+        this.amount = transaction.getAmount().value();
     }
 
     @Override

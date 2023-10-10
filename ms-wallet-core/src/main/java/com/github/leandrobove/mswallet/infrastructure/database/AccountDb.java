@@ -42,7 +42,7 @@ public class AccountDb implements AccountGateway {
         var sql = """
                 INSERT INTO account(id, client_id, balance, created_at, updated_at) VALUES(?,?,?,?,?);
                 """;
-        jdbcTemplate.update(sql, account.getId().value(), account.getClient().getId().value(), account.getBalance(),
+        jdbcTemplate.update(sql, account.getId().value(), account.getClient().getId().value(), account.getBalance().value(),
                 account.getCreatedAt(), account.getUpdatedAt());
     }
 
@@ -52,6 +52,6 @@ public class AccountDb implements AccountGateway {
                 UPDATE account SET balance = ? WHERE id = ?;
                 """;
 
-        jdbcTemplate.update(sql, account.getBalance(), account.getId().value());
+        jdbcTemplate.update(sql, account.getBalance().value(), account.getId().value());
     }
 }

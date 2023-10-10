@@ -8,14 +8,14 @@ import java.time.OffsetDateTime;
 public class Account extends AggregateRoot<AccountId> {
 
     private Client client;
-    private BigDecimal balance;
+    private Money balance;
     private OffsetDateTime createdAt;
     private OffsetDateTime updatedAt;
 
     private Account(
             final AccountId id,
             final Client client,
-            final BigDecimal balance,
+            final Money balance,
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
@@ -30,7 +30,7 @@ public class Account extends AggregateRoot<AccountId> {
 
     public static Account create(final Client client) {
         var accountId = AccountId.unique();
-        var initialAccountBalance = BigDecimal.ZERO;
+        var initialAccountBalance = Money.ZERO;
         var now = OffsetDateTime.now();
 
         return new Account(accountId, client, initialAccountBalance, now, now);
@@ -43,7 +43,7 @@ public class Account extends AggregateRoot<AccountId> {
             final OffsetDateTime createdAt,
             final OffsetDateTime updatedAt
     ) {
-        return new Account(AccountId.from(id), client, balance, createdAt, updatedAt);
+        return new Account(AccountId.from(id), client, Money.from(balance, null), createdAt, updatedAt);
     }
 
     private void validate() {
@@ -52,17 +52,17 @@ public class Account extends AggregateRoot<AccountId> {
         }
     }
 
-    public void credit(BigDecimal amount) {
+    public void credit(final Money amount) {
         validateAmount(amount);
 
         this.balance = this.balance.add(amount);
         this.updatedAt = OffsetDateTime.now();
     }
 
-    public void debit(BigDecimal amount) {
+    public void debit(final Money amount) {
         validateAmount(amount);
 
-        if (amount.compareTo(this.balance) > 0) {
+        if (amount.isGreaterThan(this.balance)) {
             throw new IllegalArgumentException("insufficient funds");
         }
 
@@ -70,11 +70,11 @@ public class Account extends AggregateRoot<AccountId> {
         this.updatedAt = OffsetDateTime.now();
     }
 
-    private static void validateAmount(BigDecimal amount) {
+    private static void validateAmount(final Money amount) {
         if (amount == null) {
             throw new IllegalArgumentException("amount is required");
         }
-        if (amount.doubleValue() <= 0) {
+        if (amount.isLessThanOrEqualTo(Money.ZERO)) {
             throw new IllegalArgumentException("amount must be a positive number");
         }
     }
@@ -83,7 +83,7 @@ public class Account extends AggregateRoot<AccountId> {
         return client;
     }
 
-    public BigDecimal getBalance() {
+    public Money getBalance() {
         return balance;
     }
 

@@ -1,9 +1,5 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
-import com.github.leandrobove.mswallet.domain.entity.Account;
-import com.github.leandrobove.mswallet.domain.entity.Client;
-import com.github.leandrobove.mswallet.domain.entity.Email;
-import com.github.leandrobove.mswallet.domain.entity.FullName;
 import lombok.val;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

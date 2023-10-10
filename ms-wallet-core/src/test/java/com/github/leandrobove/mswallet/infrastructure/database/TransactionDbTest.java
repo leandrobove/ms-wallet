@@ -5,6 +5,7 @@ import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.entity.Money;
 import com.github.leandrobove.mswallet.domain.entity.Transaction;
 import com.github.leandrobove.mswallet.infrastructure.database.AccountDb;
 import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
@@ -45,13 +46,13 @@ public class TransactionDbTest {
 
         Account accountFrom = Account.create(client1);
         Account accountTo = Account.create(client2);
-        accountFrom.credit(new BigDecimal(1000.00));
+        accountFrom.credit(Money.from(new BigDecimal(1000.00)));
         accountGateway.save(accountFrom);
         accountGateway.save(accountTo);
         assertThat(accountGateway.findById(accountFrom.getId())).isPresent();
         assertThat(accountGateway.findById(accountTo.getId())).isPresent();
 
-        Transaction transaction = Transaction.transfer(accountFrom, accountTo, new BigDecimal(50.00));
+        Transaction transaction = Transaction.transfer(accountFrom, accountTo, Money.from(new BigDecimal(50.00)));
         transactionGateway.create(transaction);
 
         var sql = """

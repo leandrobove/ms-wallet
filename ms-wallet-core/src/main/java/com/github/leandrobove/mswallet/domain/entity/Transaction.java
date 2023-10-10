@@ -4,29 +4,28 @@ import com.github.leandrobove.mswallet.domain.AggregateRoot;
 import com.github.leandrobove.mswallet.domain.event.BalanceUpdatedEvent;
 import com.github.leandrobove.mswallet.domain.event.TransactionCreatedEvent;
 
-import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 public class Transaction extends AggregateRoot<TransactionId> {
 
     private Account accountFrom;
     private Account accountTo;
-    private BigDecimal amount;
+    private Money amount;
     private OffsetDateTime createdAt;
 
     private Transaction(
+            final TransactionId id,
             final Account accountFrom,
             final Account accountTo,
-            final BigDecimal amount
+            final Money amount,
+            final OffsetDateTime createdAt
     ) {
-        super(TransactionId.unique());
-
-        var now = OffsetDateTime.now();
+        super(id);
 
         this.accountFrom = accountFrom;
         this.accountTo = accountTo;
         this.amount = amount;
-        this.createdAt = now;
+        this.createdAt = createdAt;
 
         this.validate();
     }
@@ -34,9 +33,12 @@ public class Transaction extends AggregateRoot<TransactionId> {
     public static Transaction transfer(
             final Account accountFrom,
             final Account accountTo,
-            final BigDecimal amount
+            final Money amount
     ) {
-        var transaction = new Transaction(accountFrom, accountTo, amount);
+        var transactionId = TransactionId.unique();
+        var now = OffsetDateTime.now();
+
+        var transaction = new Transaction(transactionId, accountFrom, accountTo, amount, now);
         transaction.getAccountFrom().debit(amount);
         transaction.getAccountTo().credit(amount);
 
@@ -56,10 +58,10 @@ public class Transaction extends AggregateRoot<TransactionId> {
         if (this.amount == null) {
             throw new IllegalArgumentException("amount is required");
         }
-        if (this.amount.doubleValue() <= 0) {
+        if (this.amount.isLessThanOrEqualTo(Money.ZERO)) {
             throw new IllegalArgumentException("amount must be greater than zero");
         }
-        if (this.accountFrom.getBalance().compareTo(this.amount) < 0) {
+        if (this.accountFrom.getBalance().isLessThan(this.amount)) {
             throw new IllegalArgumentException("insufficient funds");
         }
         if (this.accountFrom.equals(accountTo)) {
@@ -75,7 +77,7 @@ public class Transaction extends AggregateRoot<TransactionId> {
         return accountTo;
     }
 
-    public BigDecimal getAmount() {
+    public Money getAmount() {
         return amount;
     }
 

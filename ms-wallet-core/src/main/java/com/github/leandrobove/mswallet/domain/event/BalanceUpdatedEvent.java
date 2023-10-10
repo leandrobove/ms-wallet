@@ -28,9 +28,9 @@ public class BalanceUpdatedEvent extends DomainEvent {
         Account accountTo = transaction.getAccountTo();
 
         this.accountIdFrom = accountFrom.getId().value();
-        this.balanceAccountFrom = accountFrom.getBalance();
+        this.balanceAccountFrom = accountFrom.getBalance().value();
         this.accountIdTo = accountTo.getId().value();
-        this.balanceAccountTo = accountTo.getBalance();
+        this.balanceAccountTo = accountTo.getBalance().value();
     }
 
     @Override

@@ -21,7 +21,7 @@ public class TransactionDb implements TransactionGateway {
                 """;
         jdbcTemplate.update(sql,
                 transaction.getId().value(),
-                transaction.getAmount(),
+                transaction.getAmount().value(),
                 transaction.getCreatedAt(),
                 transaction.getAccountFrom().getId().value(),
                 transaction.getAccountTo().getId().value()

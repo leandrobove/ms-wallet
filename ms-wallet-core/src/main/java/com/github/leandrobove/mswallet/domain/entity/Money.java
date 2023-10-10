@@ -8,38 +8,43 @@ import java.text.NumberFormat;
 import java.util.Currency;
 import java.util.Objects;
 
-import static java.util.Objects.requireNonNull;
-
 public final class Money implements ValueObject {
 
     private final BigDecimal amount;
     private final Currency currency;
+    public static final Money ZERO = new Money(BigDecimal.ZERO, null);
 
     private Money(BigDecimal amount, Currency currency) {
-        requireNonNull(amount, "Amount cannot be null");
+        if (Objects.isNull(amount)) {
+            throw new IllegalArgumentException("amount is required");
+        }
 
         this.amount = amount.setScale(2, RoundingMode.HALF_EVEN);
-        this.currency = currency;
+        this.currency = (Objects.isNull(currency)) ? Currency.getInstance("USD") : currency;
 
         validate();
     }
 
     private void validate() {
-        requireNonNull(amount, "Amount cannot be null");
-        requireNonNull(currency, "Currency cannot be null");
+        if (Objects.isNull(this.amount)) {
+            throw new IllegalArgumentException("amount is required");
+        }
+        if (Objects.isNull(this.currency)) {
+            throw new IllegalArgumentException("currency is required");
+        }
     }
 
-    public static Money createNew(BigDecimal amount, Currency currency) {
+    public static Money from(BigDecimal amount) {
+        return new Money(amount, null);
+    }
+
+    public static Money from(BigDecimal amount, Currency currency) {
         return new Money(amount, currency);
     }
 
-    public static Money createNew(BigDecimal amount, String currencyCode) {
-        return new Money(amount, Currency.getInstance(currencyCode));
-    }
-
-    public static Money from(BigDecimal amount, String currencyCode) {
-        return new Money(amount, Currency.getInstance(currencyCode));
-    }
+//    public static Money from(BigDecimal amount, String currencyCode) {
+//        return new Money(amount, Currency.getInstance(currencyCode));
+//    }
 
     private void verifyIfCurrencyItsEqualTo(Money otherMoney) {
         if (!currency.equals(otherMoney.currency)) {
@@ -97,13 +102,13 @@ public final class Money implements ValueObject {
     }
 
     public Money addPercentage(BigDecimal percentage) {
-        BigDecimal amountPercentage = this.percentage(percentage).getAmount();
+        BigDecimal amountPercentage = this.percentage(percentage).getValue();
         BigDecimal result = this.amount.add(amountPercentage);
         return new Money(result, this.currency);
     }
 
     public Money subtractPercentage(BigDecimal percentage) {
-        BigDecimal amountPercentage = this.percentage(percentage).getAmount();
+        BigDecimal amountPercentage = this.percentage(percentage).getValue();
         BigDecimal result = this.amount.subtract(amountPercentage);
         return new Money(result, this.currency);
     }
@@ -128,7 +133,11 @@ public final class Money implements ValueObject {
         return amount.compareTo(otherMoney.amount) <= 0;
     }
 
-    public BigDecimal getAmount() {
+    public BigDecimal getValue() {
+        return amount;
+    }
+
+    public BigDecimal value() {
         return amount;
     }
 

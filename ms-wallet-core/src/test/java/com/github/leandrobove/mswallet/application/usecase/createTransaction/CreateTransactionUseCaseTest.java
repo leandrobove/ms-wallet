@@ -2,14 +2,8 @@ package com.github.leandrobove.mswallet.application.usecase.createTransaction;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
-import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCase;
-import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCaseInput;
-import com.github.leandrobove.mswallet.application.usecase.createTransaction.CreateTransactionUseCaseOutput;
 import com.github.leandrobove.mswallet.domain.EventPublisher;
-import com.github.leandrobove.mswallet.domain.entity.Account;
-import com.github.leandrobove.mswallet.domain.entity.AccountId;
-import com.github.leandrobove.mswallet.domain.entity.Client;
-import com.github.leandrobove.mswallet.domain.entity.Transaction;
+import com.github.leandrobove.mswallet.domain.entity.*;
 import com.github.leandrobove.mswallet.domain.event.BalanceUpdatedEvent;
 import com.github.leandrobove.mswallet.domain.event.TransactionCreatedEvent;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
@@ -54,8 +48,8 @@ public class CreateTransactionUseCaseTest {
         client1.addAccount(accountFrom);
         client2.addAccount(accountTo);
 
-        accountFrom.credit(new BigDecimal(1000.00));
-        accountTo.credit(new BigDecimal(1000.00));
+        accountFrom.credit(Money.from(new BigDecimal(1000.00)));
+        accountTo.credit(Money.from(new BigDecimal(1000.00)));
 
         //mock
         when(accountGateway.findById(accountFrom.getId())).thenReturn(Optional.of(accountFrom));
@@ -105,7 +99,7 @@ public class CreateTransactionUseCaseTest {
         Client client1 = Client.create("John", "Brad", "john@gmail.com", "297.263.110-20");
         Account accountFrom = Account.create(client1);
         client1.addAccount(accountFrom);
-        accountFrom.credit(new BigDecimal(1000.00));
+        accountFrom.credit(Money.from(new BigDecimal(1000.00)));
 
         var accountToId = AccountId.unique();
         when(accountGateway.findById(accountFrom.getId())).thenReturn(Optional.of(accountFrom));
@@ -159,12 +153,12 @@ public class CreateTransactionUseCaseTest {
         client1.addAccount(accountFrom);
         client2.addAccount(accountTo);
 
-        accountFrom.credit(new BigDecimal(1000.00));
-        accountTo.credit(new BigDecimal(1000.00));
+        accountFrom.credit(Money.from(new BigDecimal(1000.00)));
+        accountTo.credit(Money.from(new BigDecimal(1000.00)));
 
-        //mock
-        when(accountGateway.findById(accountFrom.getId())).thenReturn(Optional.of(accountFrom));
-        when(accountGateway.findById(accountTo.getId())).thenReturn(Optional.of(accountTo));
+//        //mock
+//        when(accountGateway.findById(accountFrom.getId())).thenReturn(Optional.of(accountFrom));
+//        when(accountGateway.findById(accountTo.getId())).thenReturn(Optional.of(accountTo));
 
         IllegalArgumentException ex = assertThrows(IllegalArgumentException.class, () -> {
             useCase.execute(CreateTransactionUseCaseInput.builder()
@@ -191,8 +185,8 @@ public class CreateTransactionUseCaseTest {
         client1.addAccount(accountFrom);
         client2.addAccount(accountTo);
 
-        accountFrom.credit(new BigDecimal(1000.00));
-        accountTo.credit(new BigDecimal(1000.00));
+        accountFrom.credit(Money.from(new BigDecimal(1000.00)));
+        accountTo.credit(Money.from(new BigDecimal(1000.00)));
 
         //mock
         when(accountGateway.findById(accountFrom.getId())).thenReturn(Optional.of(accountFrom));
