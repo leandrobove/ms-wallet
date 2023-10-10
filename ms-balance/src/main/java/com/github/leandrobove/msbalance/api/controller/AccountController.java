@@ -1,28 +1,25 @@
-package com.github.leandrobove.msbalance.controller;
+package com.github.leandrobove.msbalance.api.controller;
 
+import com.github.leandrobove.msbalance.api.AccountAPI;
+import com.github.leandrobove.msbalance.api.dto.BalanceResponse;
 import com.github.leandrobove.msbalance.service.AccountService;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Objects;
 
 @RestController
-@RequestMapping(value = "/accounts", produces = MediaType.APPLICATION_JSON_VALUE)
-public class AccountController {
+public class AccountController implements AccountAPI {
     private final AccountService accountService;
 
     public AccountController(final AccountService accountService) {
         this.accountService = Objects.requireNonNull(accountService);
     }
 
-    @GetMapping("/{accountId}/balance")
-    public ResponseEntity<?> getBalanceByAccountId(@PathVariable String accountId) {
+    @Override
+    public ResponseEntity<?> getBalanceByAccountId(String accountId) {
         try {
             var account = accountService.findById(accountId);
 

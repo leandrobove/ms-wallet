@@ -1,4 +1,4 @@
-package com.github.leandrobove.msbalance.controller;
+package com.github.leandrobove.msbalance.api.dto;
 
 import java.math.BigDecimal;
 
