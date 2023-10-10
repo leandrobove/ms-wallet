@@ -10,6 +10,9 @@ import java.time.OffsetDateTime;
 @Data
 public class BalanceUpdatedEvent implements Serializable {
 
+    @JsonProperty("event_id")
+    private String eventId;
+
     @JsonProperty("account_id_from")
     private String accountIdFrom;
 
@@ -22,7 +25,7 @@ public class BalanceUpdatedEvent implements Serializable {
     @JsonProperty("balance_account_to")
     private BigDecimal balanceAccountTo;
 
+    @JsonProperty("date_time_occurred")
     private OffsetDateTime dateTimeOccurred;
 
-    private String eventId;
 }

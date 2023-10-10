@@ -10,7 +10,7 @@ public abstract class DomainEvent implements DomainObject {
     protected final OffsetDateTime dateTimeOccurred;
 
     protected DomainEvent() {
-        this.eventId = UUID.randomUUID().toString();
+        this.eventId = IdUtils.uuid();
         this.dateTimeOccurred = OffsetDateTime.now();
     }
 
