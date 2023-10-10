@@ -14,6 +14,7 @@ public class DomainEventTopicResolver implements TopicResolver {
     static {
         eventTopicMap.put("BalanceUpdatedEvent", "balanceUpdatedSupplier-out-0");
         eventTopicMap.put("TransactionCreatedEvent", "transactionCreatedSupplier-out-0");
+        eventTopicMap.put("AccountCreatedEvent", "accountCreatedSupplier-out-0");
     }
 
     @Override

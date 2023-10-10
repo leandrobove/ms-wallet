@@ -1,6 +1,7 @@
 package com.github.leandrobove.mswallet.domain.entity;
 
 import com.github.leandrobove.mswallet.domain.AggregateRoot;
+import com.github.leandrobove.mswallet.domain.event.AccountCreatedEvent;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
@@ -33,7 +34,11 @@ public class Account extends AggregateRoot<AccountId> {
         var initialAccountBalance = Money.ZERO;
         var now = OffsetDateTime.now();
 
-        return new Account(accountId, client, initialAccountBalance, now, now);
+        Account account = new Account(accountId, client, initialAccountBalance, now, now);
+
+        account.registerEvent(new AccountCreatedEvent(account));
+
+        return account;
     }
 
     public static Account rebuildAccount(

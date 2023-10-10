@@ -2,6 +2,7 @@ package com.github.leandrobove.mswallet.application.usecase.createAccount;
 
 import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
 import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
+import com.github.leandrobove.mswallet.domain.EventPublisher;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
@@ -15,13 +16,16 @@ import static java.util.Objects.isNull;
 public class CreateAccountUseCase {
     private final AccountGateway accountGateway;
     private final ClientGateway clientGateway;
+    private final EventPublisher eventPublisher;
 
     public CreateAccountUseCase(
             final AccountGateway accountGateway,
-            final ClientGateway clientGateway
+            final ClientGateway clientGateway,
+            final EventPublisher eventPublisher
     ) {
         this.accountGateway = accountGateway;
         this.clientGateway = clientGateway;
+        this.eventPublisher = eventPublisher;
     }
 
     @Transactional
@@ -33,6 +37,8 @@ public class CreateAccountUseCase {
         Account account = Account.create(client);
 
         accountGateway.save(account);
+
+        account.publishDomainEvents(eventPublisher);
 
         return CreateAccountUseCaseOutput.from(account);
     }

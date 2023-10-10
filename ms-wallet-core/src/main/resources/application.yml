@@ -53,3 +53,6 @@ spring:
         transactionCreatedSupplier-out-0:
           destination: wallet-core.v1.event.transaction-created
           contentType: application/json
+        accountCreatedSupplier-out-0:
+          destination: wallet-core.v1.event.account-created
+          contentType: application/json

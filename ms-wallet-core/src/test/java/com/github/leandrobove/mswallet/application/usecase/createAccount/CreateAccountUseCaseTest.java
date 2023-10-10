@@ -5,6 +5,8 @@ import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
 import com.github.leandrobove.mswallet.application.usecase.createAccount.CreateAccountUseCase;
 import com.github.leandrobove.mswallet.application.usecase.createAccount.CreateAccountUseCaseInput;
 import com.github.leandrobove.mswallet.application.usecase.createAccount.CreateAccountUseCaseOutput;
+import com.github.leandrobove.mswallet.domain.DomainEvent;
+import com.github.leandrobove.mswallet.domain.EventPublisher;
 import com.github.leandrobove.mswallet.domain.entity.Account;
 import com.github.leandrobove.mswallet.domain.entity.Client;
 import com.github.leandrobove.mswallet.domain.entity.ClientId;
@@ -31,6 +33,9 @@ public class CreateAccountUseCaseTest {
     @Mock
     private AccountGateway accountGateway;
 
+    @Mock
+    private EventPublisher eventPublisher;
+
     @InjectMocks
     private CreateAccountUseCase useCase;
 
@@ -49,6 +54,7 @@ public class CreateAccountUseCaseTest {
 
         verify(clientGateway, times(1)).findById(clientId);
         verify(accountGateway, times(1)).save(any(Account.class));
+        verify(eventPublisher, times(1)).publishEvent(any(DomainEvent.class));
 
         assertThat(output.getId()).isNotNull();
     }
@@ -67,6 +73,7 @@ public class CreateAccountUseCaseTest {
         assertThat(ex.getMessage()).isEqualTo("client id " + clientId + " not found");
         verify(clientGateway, times(1)).findById(clientId);
         verify(accountGateway, never()).save(any(Account.class));
+        verify(eventPublisher, never()).publishEvent(any(DomainEvent.class));
     }
 
     @Test
@@ -76,5 +83,7 @@ public class CreateAccountUseCaseTest {
                     .clientId("")
                     .build());
         });
+        verify(accountGateway, never()).save(any(Account.class));
+        verify(eventPublisher, never()).publishEvent(any(DomainEvent.class));
     }
 }
