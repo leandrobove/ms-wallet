@@ -1,8 +1,8 @@
 package com.github.leandrobove.mswallet.infrastructure.web.api.controller;
 
-import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCase;
-import com.github.leandrobove.mswallet.application.usecase.createClient.CreateClientUseCaseInput;
-import com.github.leandrobove.mswallet.domain.entity.CPF;
+import com.github.leandrobove.mswallet.application.client.create.CreateClientUseCase;
+import com.github.leandrobove.mswallet.application.client.create.CreateClientUseCaseInput;
+import com.github.leandrobove.mswallet.domain.client.CPF;
 import com.github.leandrobove.mswallet.infrastructure.web.api.ClientAPI;
 import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateClientRequest;
 import com.github.leandrobove.mswallet.infrastructure.web.api.model.CreateClientResponse;

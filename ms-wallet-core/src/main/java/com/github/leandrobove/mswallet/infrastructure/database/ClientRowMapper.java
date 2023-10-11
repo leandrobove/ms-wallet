@@ -1,6 +1,6 @@
 package com.github.leandrobove.mswallet.infrastructure.database;
 
-import com.github.leandrobove.mswallet.domain.entity.Client;
+import com.github.leandrobove.mswallet.domain.client.Client;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

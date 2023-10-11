@@ -1,7 +1,7 @@
 package com.github.leandrobove.mswallet.infrastructure.database;
 
-import com.github.leandrobove.mswallet.domain.entity.Transaction;
-import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
+import com.github.leandrobove.mswallet.domain.transaction.Transaction;
+import com.github.leandrobove.mswallet.domain.transaction.TransactionGateway;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 

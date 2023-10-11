@@ -1,7 +1,7 @@
 package com.github.leandrobove.mswallet.infrastructure.web.api.exception;
 
-import com.github.leandrobove.mswallet.domain.exception.CpfAlreadyExistsException;
-import com.github.leandrobove.mswallet.domain.exception.EmailAlreadyExistsException;
+import com.github.leandrobove.mswallet.domain.client.CpfAlreadyExistsException;
+import com.github.leandrobove.mswallet.domain.client.EmailAlreadyExistsException;
 import com.github.leandrobove.mswallet.domain.exception.EntityNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;

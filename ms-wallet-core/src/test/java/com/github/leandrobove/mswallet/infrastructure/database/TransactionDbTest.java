@@ -1,15 +1,12 @@
 package com.github.leandrobove.mswallet.infrastructure.database;
 
-import com.github.leandrobove.mswallet.application.gateway.AccountGateway;
-import com.github.leandrobove.mswallet.application.gateway.ClientGateway;
-import com.github.leandrobove.mswallet.application.gateway.TransactionGateway;
-import com.github.leandrobove.mswallet.domain.entity.Account;
-import com.github.leandrobove.mswallet.domain.entity.Client;
-import com.github.leandrobove.mswallet.domain.entity.Money;
-import com.github.leandrobove.mswallet.domain.entity.Transaction;
-import com.github.leandrobove.mswallet.infrastructure.database.AccountDb;
-import com.github.leandrobove.mswallet.infrastructure.database.ClientDb;
-import com.github.leandrobove.mswallet.infrastructure.database.TransactionDb;
+import com.github.leandrobove.mswallet.domain.account.AccountGateway;
+import com.github.leandrobove.mswallet.domain.client.ClientGateway;
+import com.github.leandrobove.mswallet.domain.transaction.TransactionGateway;
+import com.github.leandrobove.mswallet.domain.account.Account;
+import com.github.leandrobove.mswallet.domain.client.Client;
+import com.github.leandrobove.mswallet.domain.Money;
+import com.github.leandrobove.mswallet.domain.transaction.Transaction;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.jdbc.DataJdbcTest;
